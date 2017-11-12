@@ -74,7 +74,7 @@ then
         --learn-rate 0.0003 --lr-warmup 16000 --lr-decay-inv-sqrt 16000 --lr-report \
         --optimizer-params 0.9 0.98 1e-09 --clip-norm 5 \
         --tied-embeddings-all \
-        --devices $GPUS --sync-sgd --seed 1234
+        --devices $GPUS --sync-sgd --seed 1111
 fi
 
 # find best model on dev set

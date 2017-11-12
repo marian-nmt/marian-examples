@@ -18,32 +18,30 @@ to execute the complete example:
 It executes a training run with `marian` using the following command:
 
 ```
-../../build/marian \
-    --devices $GPUS \
-    --seed 1234 \
-    --type transformer \
-    --model model/model.npz \
+..//build/marian \
+    --model model/model.npz --type transformer \
     --train-sets data/corpus.bpe.en data/corpus.bpe.de \
-    --vocabs model/vocab.ende.yml model/vocab.ende.yml \
     --max-length 100 \
+    --vocabs model/vocab.ende.yml model/vocab.ende.yml \
     --mini-batch-fit -w 7000 --maxi-batch 1000 \
     --early-stopping 10 \
     --valid-freq 5000 --save-freq 5000 --disp-freq 500 \
-    --valid-metrics ce-mean perplexity ce-mean-words translation \
+    --valid-metrics cross-entropy perplexity translation \
     --valid-sets data/valid.bpe.en data/valid.bpe.de \
     --valid-script-path ./scripts/validate.sh \
-    --valid-max-length 100 \
+    --valid-translation-output data/valid.bpe.en.output --quiet-translation \
+    --valid-mini-batch 64 \
+    --beam-size 6 --normalize 0.6 \
     --log model/train.log --valid-log model/valid.log \
+    --enc-depth 6 --dec-depth 6 \
+    --transformer-heads 8 \
     --transformer-postprocess-emb d \
-    --transformer-postprocess dhn \
-    --transformer-heads 16 --transformer-dropout 0.3 \
-    --transformer-dim-ffn 4096 \
-    --enc-depth 6 --dec-depth 6 --dim-emb 1024 \
+    --transformer-postprocess dan \
+    --transformer-dropout 0.1 --label-smoothing 0.1 \
+    --learn-rate 0.0003 --lr-warmup 16000 --lr-decay-inv-sqrt 16000 --lr-report \
+    --optimizer-params 0.9 0.98 1e-09 --clip-norm 5 \
     --tied-embeddings-all \
-    --label-smoothing 0.1 \
-    --clip-norm 5 --optimizer-params 0.9 0.98 1e-09 \
-    --learn-rate 0.0003 --lr-report --lr-warmup 16000 --lr-decay-inv-sqrt 16000 \
-    --sync-sgd
+    --devices $GPUS --sync-sgd --seed 1111
 ```
 
 This reproduces a system roughly equivalent to the basic 6-layer transformer
@@ -64,4 +62,5 @@ The evaluation is performed on WMT test sets from 2014, 2015 and 2016 using
 computation of shareable, comparable, and reproducible BLEU scores.  The
 WMT-213 test set is used as the validation set.
 
-See the basic training example (`marian/examples/training/`) for more details.
+See the basic training example (`marian/examples/training-basics/`) for more
+details.
