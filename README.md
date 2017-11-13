@@ -5,6 +5,7 @@ Examples, tutorials and use cases for the Marian toolkit.
 More information on https://marian-nmt.github.io
 
 List of examples:
+* `translating-amun` -- examples for translating with Amun
 * `training-basics` -- the complete example for training a WMT16-scale model
 * `transformer` -- scripts for training the transformer model
 
