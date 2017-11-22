@@ -1,21 +1,21 @@
-# Example for training transformer model
+# Example: Training a transformer model
 
-Files and scripts in this folder shows how to run transformer model ([Vaswani
-et al, 2017](https://arxiv.org/abs/1706.03762)) on WMT-17 English-German data.
-The problem-set is adapted from
-[tensor2tensor](https://github.com/tensorflow/tensor2tensor) repository from
-Google, i.e. 36,000 common BPE subwords for both languages.
-No back-translations are used.
+Files and scripts in this folder show how to train a Google-style transformer 
+model ([Vaswani et al, 2017](https://arxiv.org/abs/1706.03762)) on WMT-17 (?)
+English-German data.
+The problem-set has been adapted from the original
+[tensor2tensor](https://github.com/tensorflow/tensor2tensor) repository by
+Google. We reuse their 36,000 common BPE subword units for both languages.
+No back-translationed data was added.
 
-
-Assuming, you have four GPUs available (here 0 1 2 3), type the command below
-to execute the complete example:
+Assuming four GPUs are available (here 0 1 2 3), execute the command below
+to run the complete example:
 
 ```
 ./run-me.sh 0 1 2 3
 ```
 
-It executes a training run with `marian` using the following command:
+This starts a training run with `marian` using the following command:
 
 ```
 ..//build/marian \
@@ -48,19 +48,19 @@ This reproduces a system roughly equivalent to the basic 6-layer transformer
 described in the original paper.
 
 The training setting includes:
-* Fitting mini-batch sizes to 7GB of GPU memory, which results in large mini-batches
+* Fitting mini-batch sizes to 7GB of GPU memory with synchronous SGD (ADAM), 
+which results in large mini-batches.
 * Validation on external data set using cross-entropy, perplexity and BLEU
-* 6-layer encoder and 6-layer decoder
-* Tied embeddings
+* 6-layer (or rather block) encoder and 6-layer decoder
+* Tied embeddings for source, target and output layer
 * Label smoothing
-* Learning rate warmup
-* Multi-GPU training with synchronous SGD
-
+* Learning rate warm-up and cool-down
+* Multi-GPU training
 
 The evaluation is performed on WMT test sets from 2014, 2015 and 2016 using
 [sacreBLEU](https://github.com/mjpost/sacreBLEU), which provides hassle-free
 computation of shareable, comparable, and reproducible BLEU scores.  The
-WMT-213 test set is used as the validation set.
+WMT-2013 test set is used as a validation set.
 
 See the basic training example (`marian/examples/training-basics/`) for more
 details.
