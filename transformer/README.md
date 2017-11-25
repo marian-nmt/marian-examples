@@ -60,6 +60,7 @@ about 12GB of RAM, we leave about 2GB for the remaining training parameters.
 
 You can reduce the workspace size to about `-w 6000` if you want to fit on 
 smaller GPUs with 8GB of RAM or increase it further more on GPUs with more RAM.
+On a Volta GPU with 16GB of RAM you can set `-w 14000` when using four GPUs.
 
 The evaluation is performed on WMT test sets from 2014, 2015 and 2016 using
 [sacreBLEU](https://github.com/mjpost/sacreBLEU), which provides hassle-free
