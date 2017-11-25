@@ -52,7 +52,8 @@ then
         --valid-metrics cross-entropy translation \
         --valid-sets data/newsdev2016.bpe.ro data/newsdev2016.bpe.en \
         --valid-script-path ./scripts/validate.sh \
-        --log model/train.log --valid-log model/valid.log
+        --log model/train.log --valid-log model/valid.log \
+        --seed 1111 --exponential-smoothing
 fi
 
 # collect 4 best models on dev set

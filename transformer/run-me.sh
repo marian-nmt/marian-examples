@@ -32,12 +32,12 @@ mkdir -p model
 # preprocess data
 if [ ! -e "data/corpus.bpe.en" ]
 then
-    ../tools/sacreBLEU/sacrebleu.py -t wmt13 -l en-de --echo src > data/valid.en
-    ../tools/sacreBLEU/sacrebleu.py -t wmt13 -l en-de --echo ref > data/valid.de
+    LC_ALL=C.UTF-8 ../tools/sacreBLEU/sacrebleu.py -t wmt13 -l en-de --echo src > data/valid.en
+    LC_ALL=C.UTF-8 ../tools/sacreBLEU/sacrebleu.py -t wmt13 -l en-de --echo ref > data/valid.de
 
-    ../tools/sacreBLEU/sacrebleu.py -t wmt14 -l en-de --echo src > data/test2014.en
-    ../tools/sacreBLEU/sacrebleu.py -t wmt15 -l en-de --echo src > data/test2015.en
-    ../tools/sacreBLEU/sacrebleu.py -t wmt16 -l en-de --echo src > data/test2016.en
+    LC_ALL=C.UTF-8 ../tools/sacreBLEU/sacrebleu.py -t wmt14 -l en-de --echo src > data/test2014.en
+    LC_ALL=C.UTF-8 ../tools/sacreBLEU/sacrebleu.py -t wmt15 -l en-de --echo src > data/test2015.en
+    LC_ALL=C.UTF-8 ../tools/sacreBLEU/sacrebleu.py -t wmt16 -l en-de --echo src > data/test2016.en
 
     ./scripts/preprocess-data.sh
 fi
@@ -74,7 +74,8 @@ then
         --learn-rate 0.0003 --lr-warmup 16000 --lr-decay-inv-sqrt 16000 --lr-report \
         --optimizer-params 0.9 0.98 1e-09 --clip-norm 5 \
         --tied-embeddings-all \
-        --devices $GPUS --sync-sgd --seed 1111
+        --devices $GPUS --sync-sgd --seed 1111 \
+        --exponential-smoothing
 fi
 
 # find best model on dev set
@@ -92,6 +93,6 @@ do
 done
 
 # calculate bleu scores on test sets
-../tools/sacreBLEU/sacrebleu.py -t wmt14 -l en-de < data/test2014.de.output
-../tools/sacreBLEU/sacrebleu.py -t wmt15 -l en-de < data/test2015.de.output
-../tools/sacreBLEU/sacrebleu.py -t wmt16 -l en-de < data/test2016.de.output
+LC_ALL=C.UTF-8 ../tools/sacreBLEU/sacrebleu.py -t wmt14 -l en-de < data/test2014.de.output
+LC_ALL=C.UTF-8 ../tools/sacreBLEU/sacrebleu.py -t wmt15 -l en-de < data/test2015.de.output
+LC_ALL=C.UTF-8 ../tools/sacreBLEU/sacrebleu.py -t wmt16 -l en-de < data/test2016.de.output
