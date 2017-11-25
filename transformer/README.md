@@ -3,10 +3,9 @@
 Files and scripts in this folder show how to train a Google-style transformer 
 model ([Vaswani et al, 2017](https://arxiv.org/abs/1706.03762)) on WMT-17 (?)
 English-German data.
-The problem-set has been adapted from the original
+The problem set has created following the example from the original
 [tensor2tensor](https://github.com/tensorflow/tensor2tensor) repository by
-Google. We reuse their 36,000 common BPE subword units for both languages.
-No back-translationed data was added.
+Google. It uses 32,000 common BPE units for both languages. 
 
 Assuming four GPUs are available (here 0 1 2 3), execute the command below
 to run the complete example:
@@ -23,7 +22,7 @@ This starts a training run with `marian` using the following command:
     --train-sets data/corpus.bpe.en data/corpus.bpe.de \
     --max-length 100 \
     --vocabs model/vocab.ende.yml model/vocab.ende.yml \
-    --mini-batch-fit -w 7000 --maxi-batch 1000 \
+    --mini-batch-fit -w 10000 --maxi-batch 1000 \
     --early-stopping 10 \
     --valid-freq 5000 --save-freq 5000 --disp-freq 500 \
     --valid-metrics cross-entropy perplexity translation \
@@ -49,14 +48,18 @@ This reproduces a system roughly equivalent to the basic 6-layer transformer
 described in the original paper.
 
 The training setting includes:
-* Fitting mini-batch sizes to 7GB of GPU memory with synchronous SGD (ADAM), 
-which results in large mini-batches.
+* Fitting mini-batch sizes to 10GB of GPU memory with synchronous SGD (ADAM), 
+which results in large mini-batches. This has been chosen to fit on GPUs with 
+about 12GB of RAM, we leave about 2GB for the remaining training parameters.
 * Validation on external data set using cross-entropy, perplexity and BLEU
 * 6-layer (or rather block) encoder and 6-layer decoder
 * Tied embeddings for source, target and output layer
 * Label smoothing
 * Learning rate warm-up and cool-down
 * Multi-GPU training
+
+You can reduce the workspace size to about `-w 6000` if you want to fit on 
+smaller GPUs with 8GB of RAM or increase it further more on GPUs with more RAM.
 
 The evaluation is performed on WMT test sets from 2014, 2015 and 2016 using
 [sacreBLEU](https://github.com/mjpost/sacreBLEU), which provides hassle-free
