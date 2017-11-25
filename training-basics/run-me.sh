@@ -54,7 +54,7 @@ then
         --valid-script-path ./scripts/validate.sh \
         --log model/train.log --valid-log model/valid.log \
         --seed 1111 --exponential-smoothing \
-        --normalize=0.6 --beam-size=6
+        --normalize=0.6 --beam-size=6 --quiet-translation
 fi
 
 # collect 4 best models on dev set
