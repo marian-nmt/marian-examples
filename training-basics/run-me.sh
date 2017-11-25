@@ -53,7 +53,8 @@ then
         --valid-sets data/newsdev2016.bpe.ro data/newsdev2016.bpe.en \
         --valid-script-path ./scripts/validate.sh \
         --log model/train.log --valid-log model/valid.log \
-        --seed 1111 --exponential-smoothing
+        --seed 1111 --exponential-smoothing \
+        --normalize=0.6 --beam-size=6
 fi
 
 # collect 4 best models on dev set
@@ -64,18 +65,18 @@ MODELS=`cat model/valid.log | grep translation | sort -rg -k8,8 -t' ' | cut -f4 
 
 # translate dev set
 cat data/newsdev2016.bpe.ro \
-    | $MARIAN/build/marian-decoder -c model/model.npz.decoder.yml -m model/model.avg.npz -d $GPUS -b 12 -n \
+    | $MARIAN/build/marian-decoder -c model/model.npz.decoder.yml -m model/model.avg.npz -d $GPUS -b 6 -n0.6 \
     | sed 's/\@\@ //g' \
     | ../tools/moses-scripts/scripts/recaser/detruecase.perl \
-    | ../tools/moses-scripts/scripts/tokenizer/detokenizer.perl -l ro \
+    | ../tools/moses-scripts/scripts/tokenizer/detokenizer.perl -l en \
     > data/newsdev2016.ro.output
 
 # translate test set
 cat data/newstest2016.bpe.ro \
-    | $MARIAN/build/marian-decoder -c model/model.npz.decoder.yml -m model/model.avg.npz -d $GPUS -b 12 -n \
+    | $MARIAN/build/marian-decoder -c model/model.npz.decoder.yml -m model/model.avg.npz -d $GPUS -b 6 -n0.6 \
     | sed 's/\@\@ //g' \
     | ../tools/moses-scripts/scripts/recaser/detruecase.perl \
-    | ../tools/moses-scripts/scripts/tokenizer/detokenizer.perl -l ro \
+    | ../tools/moses-scripts/scripts/tokenizer/detokenizer.perl -l en \
     > data/newstest2016.ro.output
 
 # calculate bleu scores on dev and test set

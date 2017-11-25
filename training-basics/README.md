@@ -42,7 +42,8 @@ Next it executes a training run with `marian`:
   --valid-sets data/newsdev2016.bpe.ro data/newsdev2016.bpe.en \
   --valid-script-path ./scripts/validate.sh \
   --log model/train.log --valid-log model/valid.log \
-  --seed 1111 --exponential-smoothing
+  --seed 1111 --exponential-smoothing \
+  --normalize=0.6 --beam-size 6
 ```
 
 After training (the training should stop if cross-entropy on the validation set
@@ -55,7 +56,7 @@ cat data/newsdev2016.bpe.ro \
     | ../../build/marian-decoder -c model/model.npz.decoder.yml -m model/model.avg.npz -d $GPUS -b 12 -n \
     | sed 's/\@\@ //g' \
     | ../tools/moses-scripts/scripts/recaser/detruecase.perl \
-    | ../tools/moses-scripts/scripts/tokenizer/detokenizer.perl -l ro \
+    | ../tools/moses-scripts/scripts/tokenizer/detokenizer.perl -l en \
     > data/newsdev2016.ro.output
 ```
 after which BLEU scores for the dev and test set are reported. Results should
@@ -82,7 +83,7 @@ apart from the final single score (last line):
 cat $1 \
     | sed 's/\@\@ //g' \
     | ../tools/moses-scripts/scripts/recaser/detruecase.perl \
-    | ../tools/moses-scripts/scripts/tokenizer/detokenize.perl -l ro \
+    | ../tools/moses-scripts/scripts/tokenizer/detokenize.perl -l en \
     | ../tools/moses-scripts/scripts/generic/multi-bleu-detok.perl data/newsdev2016.en \
     | sed -r 's/BLEU = ([0-9.]+),.*/\1/'
 ```
