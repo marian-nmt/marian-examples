@@ -53,7 +53,8 @@ to translate the WMT2016 dev set and test set with `marian-decoder`:
 
 ```
 cat data/newsdev2016.bpe.ro \
-    | ../../build/marian-decoder -c  model/model.npz.best-translation.npz.decoder.yml -d $GPUS -b 12 -n \
+    | ../../build/marian-decoder -c  model/model.npz.best-translation.npz.decoder.yml -d $GPUS \
+      -b 12 -n1 --mini-batch 64 --maxi-batch 10 --maxi-batch-sort src -w 2500 \
     | sed 's/\@\@ //g' \
     | ../tools/moses-scripts/scripts/recaser/detruecase.perl \
     | ../tools/moses-scripts/scripts/tokenizer/detokenizer.perl -l en \
