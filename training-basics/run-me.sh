@@ -36,7 +36,7 @@ then
 fi
 
 # train model
-if [ ! -e "model/model.npz" ]
+if [ ! -e "model/model.npz.best-translation.npz" ]
 then
     $MARIAN/build/marian \
         --devices $GPUS \
@@ -53,19 +53,15 @@ then
         --valid-sets data/newsdev2016.bpe.ro data/newsdev2016.bpe.en \
         --valid-script-path ./scripts/validate.sh \
         --log model/train.log --valid-log model/valid.log \
+        --overwrite --keep-best \
         --seed 1111 --exponential-smoothing \
-        --normalize=0.6 --beam-size=6 --quiet-translation
+        --normalize=1 --beam-size=12 --quiet-translation
 fi
-
-# collect 4 best models on dev set
-MODELS=`cat model/valid.log | grep translation | sort -rg -k8,8 -t' ' | cut -f4 -d' ' | head -n4 | xargs -I {} echo model/model.iter{}.npz | xargs`
-
-# average 4 best models into single model
-./scripts/average.py -m $MODELS -o model/model.avg.npz
 
 # translate dev set
 cat data/newsdev2016.bpe.ro \
-    | $MARIAN/build/marian-decoder -c model/model.npz.decoder.yml -m model/model.avg.npz -d $GPUS -b 6 -n0.6 \
+    | $MARIAN/build/marian-decoder -c model/model.npz.best-translation.npz.decoder.yml -d $GPUS -b 12 -n1 \
+      --mini-batch 64 --maxi-batch 10 --maxi-batch-sort src \
     | sed 's/\@\@ //g' \
     | ../tools/moses-scripts/scripts/recaser/detruecase.perl \
     | ../tools/moses-scripts/scripts/tokenizer/detokenizer.perl -l en \
@@ -73,7 +69,8 @@ cat data/newsdev2016.bpe.ro \
 
 # translate test set
 cat data/newstest2016.bpe.ro \
-    | $MARIAN/build/marian-decoder -c model/model.npz.decoder.yml -m model/model.avg.npz -d $GPUS -b 6 -n0.6 \
+    | $MARIAN/build/marian-decoder -c model/model.npz.best-translation.npz.decoder.yml -d $GPUS -b 12 -n1 \
+      --mini-batch 64 --maxi-batch 10 --maxi-batch-sort src \
     | sed 's/\@\@ //g' \
     | ../tools/moses-scripts/scripts/recaser/detruecase.perl \
     | ../tools/moses-scripts/scripts/tokenizer/detokenizer.perl -l en \
