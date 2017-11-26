@@ -44,7 +44,7 @@ Next it executes a training run with `marian`:
     --log model/train.log --valid-log model/valid.log \
     --overwrite --keep-best \
     --seed 1111 --exponential-smoothing \
-    --normalize=1 --beam-size=12 --quiet-translation
+    --normalize=1 --beam-size 12 --quiet-translation
 ```
 
 After training (the training should stop if cross-entropy on the validation set
