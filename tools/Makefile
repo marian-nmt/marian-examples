@@ -5,4 +5,4 @@ moses-scripts:
 subword-nmt:
 	git clone https://github.com/rsennrich/subword-nmt
 sacreBLEU:
-	git clone https://github.com/mjpost/sacreBLEU
+	git clone https://github.com/mjpost/sacreBLEU -b master
