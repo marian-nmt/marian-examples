@@ -57,9 +57,9 @@ then
         --max-length 100 \
         --vocabs model/vocab.ende.yml model/vocab.ende.yml \
         --mini-batch-fit -w 10000 --maxi-batch 1000 \
-        --early-stopping 10 \
+        --early-stopping 10 --cost-type=ce-mean-words \
         --valid-freq 5000 --save-freq 5000 --disp-freq 500 \
-        --valid-metrics cross-entropy perplexity translation \
+        --valid-metrics ce-mean-words perplexity translation \
         --valid-sets data/valid.bpe.en data/valid.bpe.de \
         --valid-script-path ./scripts/validate.sh \
         --valid-translation-output data/valid.bpe.en.output --quiet-translation \

@@ -76,14 +76,14 @@ then
         --max-length 100 \
         --vocabs model/vocab.ende.yml model/vocab.ende.yml \
         --mini-batch-fit -w 3500 --maxi-batch 1000 \
-        --valid-freq 10000 --save-freq 10000 --disp-freq 100 \
-        --valid-metrics cross-entropy translation \
+        --valid-freq 10000 --save-freq 10000 --disp-freq 1000 \
+        --valid-metrics ce-mean-words perplexity translation \
         --valid-script-path ./scripts/validate.en.sh \
         --valid-translation-output data/valid.bpe.de.output --quiet-translation \
         --valid-sets data/valid.bpe.de data/valid.bpe.en \
         --valid-mini-batch 64 --beam-size 12 --normalize=1 \
         --overwrite --keep-best \
-        --early-stopping 5 --after-epochs 10 \
+        --early-stopping 5 --after-epochs 10 --cost-type=ce-mean-words \
         --log model.back/train.log --valid-log model.back/valid.log \
         --tied-embeddings-all --layer-normalization \
         --devices $GPUS --seed 1111 \
@@ -120,7 +120,7 @@ do
         --vocabs model/vocab.ende.yml model/vocab.ende.yml \
         --mini-batch-fit -w $WORKSPACE --mini-batch 1000 --maxi-batch 1000 \
         --valid-freq 5000 --save-freq 5000 --disp-freq 500 \
-        --valid-metrics cross-entropy translation \
+        --valid-metrics ce-mean-words perplexity translation \
         --valid-sets data/valid.bpe.en data/valid.bpe.de \
         --valid-script-path ./scripts/validate.sh \
         --valid-translation-output data/valid.bpe.en.output --quiet-translation \
@@ -133,7 +133,7 @@ do
         --dec-depth 1 --dec-cell-base-depth 8 --dec-cell-high-depth 1 \
         --tied-embeddings-all --layer-normalization \
         --dropout-rnn 0.1 --label-smoothing 0.1 \
-        --learn-rate 0.0003 --lr-warmup 16000 --lr-decay-inv-sqrt 16000 --lr-report \
+        --learn-rate 0.0003 --lr-decay-inv-sqrt 16000 --lr-report \
         --optimizer-params 0.9 0.98 1e-09 --clip-norm 5 \
         --devices $GPUS --sync-sgd --seed $i$i$i$i  \
         --exponential-smoothing
@@ -153,7 +153,7 @@ do
         --vocabs model/vocab.ende.yml model/vocab.ende.yml \
         --mini-batch-fit -w $WORKSPACE --mini-batch 1000 --maxi-batch 1000 \
         --valid-freq 5000 --save-freq 5000 --disp-freq 500 \
-        --valid-metrics cross-entropy translation \
+        --valid-metrics ce-mean-words perplexity translation \
         --valid-sets data/valid.bpe.en data/valid.bpe.de \
         --valid-script-path ./scripts/validate.sh \
         --valid-translation-output data/valid.bpe.en.output --quiet-translation \
@@ -166,7 +166,7 @@ do
         --dec-depth 1 --dec-cell-base-depth 8 --dec-cell-high-depth 1 \
         --tied-embeddings-all --layer-normalization \
         --transformer-dropout 0.1 --label-smoothing 0.1 \
-        --learn-rate 0.0003 --lr-warmup 16000 --lr-decay-inv-sqrt 16000 --lr-report \
+        --learn-rate 0.0003 --lr-decay-inv-sqrt 16000 --lr-report \
         --optimizer-params 0.9 0.98 1e-09 --clip-norm 5 \
         --devices $GPUS --sync-sgd --seed $i$i$i$i$i \
         --exponential-smoothing --right-left
