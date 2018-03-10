@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export LC_ALL=C.UTF-8
+
 cat $1 \
     | sed 's/\@\@ //g' \
     | ../tools/moses-scripts/scripts/recaser/detruecase.perl 2>/dev/null \
