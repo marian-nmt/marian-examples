@@ -12,7 +12,7 @@ echo Using GPUs: $GPUS
 
 WORKSPACE=9500
 N=4
-E=7
+EPOCHS=8
 B=12
 
 if [ ! -e $MARIAN/build/marian ]
@@ -109,8 +109,6 @@ for i in $(seq 1 $N)
 do
   mkdir -p model/ens$i
   # train model
-  if [ ! -e "model/ens$i/model.npz.best-translation.npz" ]
-  then
     $MARIAN/build/marian \
         --model model/ens$i/model.npz --type transformer --pretrained-model mono/model.npz \
         --train-sets data/all.bpe.en data/all.bpe.de \
@@ -125,7 +123,7 @@ do
         --beam-size 12 --normalize=1 \
         --valid-mini-batch 64 \
         --overwrite --keep-best \
-        --early-stopping 5 --after-epochs $E --cost-type=ce-mean-words \
+        --early-stopping 5 --after-epochs $EPOCHS --cost-type=ce-mean-words \
         --log model/ens$i/train.log --valid-log model/ens$i/valid.log \
         --enc-depth 6 --dec-depth 6 \
         --tied-embeddings-all \
@@ -134,15 +132,12 @@ do
         --optimizer-params 0.9 0.98 1e-09 --clip-norm 5 \
         --devices $GPUS --sync-sgd --seed $i$i$i$i  \
         --exponential-smoothing
-  fi
 done
 
 for i in $(seq 1 $N)
 do
   mkdir -p model/ens-rtl$i
   # train model
-  if [ ! -e "model/ens-rtl$i/model.npz.best-translation.npz" ]
-  then
     $MARIAN/build/marian \
         --model model/ens-rtl$i/model.npz --type transformer \
         --train-sets data/all.bpe.en data/all.bpe.de \
@@ -157,7 +152,7 @@ do
         --beam-size 12 --normalize=1 \
         --valid-mini-batch 64 \
         --overwrite --keep-best \
-        --early-stopping 5 --after-epochs $E --cost-type=ce-mean-words \
+        --early-stopping 5 --after-epochs $EPOCHS --cost-type=ce-mean-words \
         --log model/ens-rtl$i/train.log --valid-log model/ens-rtl$i/valid.log \
         --enc-depth 6 --dec-depth 6 \
         --tied-embeddings-all \
@@ -166,7 +161,6 @@ do
         --optimizer-params 0.9 0.98 1e-09 --clip-norm 5 \
         --devices $GPUS --sync-sgd --seed $i$i$i$i$i \
         --exponential-smoothing --right-left
-  fi
 done
 
 # translate test sets

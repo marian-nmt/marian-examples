@@ -12,7 +12,7 @@ echo Using GPUs: $GPUS
 WORKSPACE=9500
 N=4
 B=12
-EPOCHS=10
+EPOCHS=8
 
 if [ ! -e $MARIAN/build/marian ]
 then
