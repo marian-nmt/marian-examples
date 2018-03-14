@@ -29,7 +29,6 @@ to run the complete example
 
 We assume GPUs with at least 12GB of RAM are used. Change the WORKSPACE setting in the script for smaller RAM, but
 be aware that this changes batch size and might lead to slighly reduced quality.
-The final system should be on-par or slighly better than the Edinburgh system due to better tuned hyper-parameters.
 
 The model architecture should be identical to Google's transformer paper, but follow procedures from the Edinburgh submission.
 The model is configured as follows:
@@ -62,12 +61,24 @@ $MARIAN/build/marian \
 
 ## Results
 
-Running the complete script from start to end shoud results in numbers similar to the following:
+Running the complete script from start to end shoud results in numbers similar to the following numbers,
+improving on Edinburgh's system submission by 1.2 BLEU:
 
 System | test2014 | test2015 | test2016(valid) | test2017 |
 |------|----------|----------|-----------------|----------|
 |Edinburgh WMT17| --  |  --  | 36.20 |28.30|
 |This example | 29.08 | 31.04 | 36.80 | 29.50|
 
-Improving on Edinburgh's system submission by 1.2 BLEU. Training all components for more than 8 epochs is likely to improve results.
-So could increasing model dimensions, but that could require careful hyperparamter tuning, especially dropout regularization.
+Training all components for more than 8 epochs is likely to improve results further.
+So could increasing model dimensions (e.g. with `--dim-emb 1024` or `--transformer-dim-ffn 4096``), but that will
+require careful hyperparamter tuning, especially dropout regularization, for instance adding:
+
+``
+--dim-emb 1024 \
+--transformer-dim-ffn 4096 \
+--transformer-dropout-attention 0.1 \
+--transformer-dropout-ffn 0.1 \
+``
+
+This would be more similar to Google's Transformer-Big architecture. This will also likely require to reduce workspace to
+around 8500 or 8000 on multiple 12GB GPUs.
