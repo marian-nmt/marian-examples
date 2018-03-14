@@ -1,4 +1,4 @@
-# Example: Reproducing Edinburgh's WMT2017 system for en-de with Marian
+# Reproducing Edinburgh's WMT2017 system for en-de with Marian
 
 Files and scripts in this folder show how to train a complete WMT-grade system
 based on [Edinburgh's WMT submission description](http://www.aclweb.org/anthology/W17-4739) for en-de.
