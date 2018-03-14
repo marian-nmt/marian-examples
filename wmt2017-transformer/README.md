@@ -66,9 +66,15 @@ improving on Edinburgh's system submission by 1.2 BLEU:
 
 |System           | test2014 | test2015 | test2016 (valid) | test2017 |
 |-----------------|----------|----------|------------------|----------|
+| Sys1 | 28.20 | 29.90 | 35.62 | 28.77 |
+| Sys2 | 27.98 | 30.15 | 35.51 | 28.66 |
+| Sys3 | 28.51 | 30.24 | 35.92 | 28.87 |
+| Sys4 | 28.27 | 30.51 | 35.76 | 28.66 |
+| Ensemble of 4 | 28.96 | 30.98 | 36.44 | 29.42 |
+| R2L Rerank | 29.08    | 31.04    | 36.80            | 29.50    |
 |Edinburgh WMT17  | --       |  --      | 36.20            | 28.30    |
-|This example     | 29.08    | 31.04    | 36.80            | 29.50    |
 
+It seems R2L reranking does not do much for the transformer. At you might want to ommit it.
 Training all components for more than 8 epochs is likely to improve results further.
 So could increasing model dimensions (e.g. with `--dim-emb 1024` or `--transformer-dim-ffn 4096`), but that will
 require careful hyperparamter tuning, especially dropout regularization, for instance adding:
