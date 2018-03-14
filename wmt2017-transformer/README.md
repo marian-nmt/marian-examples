@@ -59,3 +59,14 @@ $MARIAN/build/marian \
     --devices $GPUS --sync-sgd --seed $i$i$i$i  \
     --exponential-smoothing
 ```
+
+## Results
+
+Running the complete script from start to end shoud results in numbers similar to the following:
+
+System | test2014 | test2015 | test2016(valid) | test2017 |
+|------|----------|----------|-----------------|----------|
+|Edinburgh WMT17| --  |  --  | 36.20 |28.30|
+|Example | 29.08 | 31.04 | 36.80 | 29.50|
+
+Improving on Edinburgh's system submission by 1.2 BLEU. Training all components for more than 8 epochs is likely to improve results. So could increasing model dimensions, but the could require careful hyperparamter tuning, especially dropout regularization. 
