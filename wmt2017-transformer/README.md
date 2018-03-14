@@ -1,4 +1,4 @@
-# Example: Beating Edinburgh's WMT2017 system for en-de with Marian's Transformer model
+# Beating Edinburgh's WMT2017 system for en-de with Marian's Transformer model
 
 Files and scripts in this folder show how to train a complete better than (!) WMT-grade system
 based on Google's Transformer model [Vaswani et al, 2017](https://arxiv.org/abs/1706.03762)
