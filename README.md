@@ -8,6 +8,8 @@ List of examples:
 * `translating-amun` -- examples for translating with Amun
 * `training-basics` -- the complete example for training a WMT16-scale model
 * `transformer` -- scripts for training the transformer model
+* `wmt2017-uedin` -- scripts for building a WMT2017-grade model for en-de based on Edinburgh's WMT2017 submission
+* `wmt2017-transformer` -- scripts for building a better than WMT2017-grade model for en-de, beating WMT2017 submission by 1.2 BLEU
 
 ## Usage
 
