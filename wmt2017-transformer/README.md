@@ -64,21 +64,21 @@ $MARIAN/build/marian \
 Running the complete script from start to end shoud results in numbers similar to the following numbers,
 improving on Edinburgh's system submission by 1.2 BLEU:
 
-System | test2014 | test2015 | test2016(valid) | test2017 |
-|------|----------|----------|-----------------|----------|
-|Edinburgh WMT17| --  |  --  | 36.20 |28.30|
-|This example | 29.08 | 31.04 | 36.80 | 29.50|
+|System           | test2014 | test2015 | test2016 (valid) | test2017 |
+|-----------------|----------|----------|------------------|----------|
+|Edinburgh WMT17  | --       |  --      | 36.20            | 28.30    |
+|This example     | 29.08    | 31.04    | 36.80            | 29.50    |
 
 Training all components for more than 8 epochs is likely to improve results further.
-So could increasing model dimensions (e.g. with `--dim-emb 1024` or `--transformer-dim-ffn 4096``), but that will
+So could increasing model dimensions (e.g. with `--dim-emb 1024` or `--transformer-dim-ffn 4096`), but that will
 require careful hyperparamter tuning, especially dropout regularization, for instance adding:
 
-``
+```
 --dim-emb 1024 \
 --transformer-dim-ffn 4096 \
 --transformer-dropout-attention 0.1 \
 --transformer-dropout-ffn 0.1 \
-``
+```
 
 This would be more similar to Google's Transformer-Big architecture. This will also likely require to reduce workspace to
 around 8500 or 8000 on multiple 12GB GPUs.
