@@ -61,8 +61,8 @@ $MARIAN/build/marian \
 
 ## Results
 
-Running the complete script from start to end shoud results in numbers similar to the following numbers,
-improving on Edinburgh's system submission by 1.2 BLEU:
+Running the complete script from start to end should result in numbers similar to the following,
+improving on Edinburgh's system submission to WMT2017 by 1.2 BLEU:
 
 |System           | test2014 | test2015 | test2016 (valid) | test2017 |
 |-----------------|----------|----------|------------------|----------|
@@ -88,4 +88,4 @@ require careful hyperparamter tuning, especially dropout regularization, for ins
 ```
 
 This would be more similar to Google's Transformer-Big architecture. This will also likely require to reduce workspace to
-around 8500 or 8000 on multiple 12GB GPUs.
+around 8500 or 8000 on multiple 12GB GPUs. Another good way might be to invest time into better back-translation etc.
