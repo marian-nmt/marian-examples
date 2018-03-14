@@ -69,4 +69,5 @@ System | test2014 | test2015 | test2016(valid) | test2017 |
 |Edinburgh WMT17| --  |  --  | 36.20 |28.30|
 |This example | 29.08 | 31.04 | 36.80 | 29.50|
 
-Improving on Edinburgh's system submission by 1.2 BLEU. Training all components for more than 8 epochs is likely to improve results. So could increasing model dimensions, but the could require careful hyperparamter tuning, especially dropout regularization. 
+Improving on Edinburgh's system submission by 1.2 BLEU. Training all components for more than 8 epochs is likely to improve results.
+So could increasing model dimensions, but that could require careful hyperparamter tuning, especially dropout regularization.
