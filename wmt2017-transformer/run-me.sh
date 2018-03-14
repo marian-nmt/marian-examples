@@ -9,12 +9,10 @@ then
 fi
 echo Using GPUs: $GPUS
 
-if [ ! $WORKSPACE ]
-then
-  WORKSPACE=9500
-fi
 
+WORKSPACE=9500
 N=4
+E=7
 B=12
 
 if [ ! -e $MARIAN/build/marian ]
@@ -107,14 +105,14 @@ then
     cat data/corpus.bpe.de data/corpus.bpe.de data/news.2016.bpe.de > data/all.bpe.de
 fi
 
-for i in `seq 1 $N`
+for i in $(seq 1 $N)
 do
   mkdir -p model/ens$i
   # train model
   if [ ! -e "model/ens$i/model.npz.best-translation.npz" ]
   then
     $MARIAN/build/marian \
-        --model model/ens$i/model.npz --type transformer \
+        --model model/ens$i/model.npz --type transformer --pretrained-model mono/model.npz \
         --train-sets data/all.bpe.en data/all.bpe.de \
         --max-length 100 \
         --vocabs model/vocab.ende.yml model/vocab.ende.yml \
@@ -127,7 +125,7 @@ do
         --beam-size 12 --normalize=1 \
         --valid-mini-batch 64 \
         --overwrite --keep-best \
-        --early-stopping 5 --after-epochs 7 --cost-type=ce-mean-words \
+        --early-stopping 5 --after-epochs $E --cost-type=ce-mean-words \
         --log model/ens$i/train.log --valid-log model/ens$i/valid.log \
         --enc-depth 6 --dec-depth 6 \
         --tied-embeddings-all \
@@ -139,7 +137,7 @@ do
   fi
 done
 
-for i in `seq 1 $N`
+for i in $(seq 1 $N)
 do
   mkdir -p model/ens-rtl$i
   # train model
@@ -159,7 +157,7 @@ do
         --beam-size 12 --normalize=1 \
         --valid-mini-batch 64 \
         --overwrite --keep-best \
-        --early-stopping 5 --after-epochs 7 --cost-type=ce-mean-words \
+        --early-stopping 5 --after-epochs $E --cost-type=ce-mean-words \
         --log model/ens-rtl$i/train.log --valid-log model/ens-rtl$i/valid.log \
         --enc-depth 6 --dec-depth 6 \
         --tied-embeddings-all \
@@ -170,7 +168,6 @@ do
         --exponential-smoothing --right-left
   fi
 done
-
 
 # translate test sets
 for prefix in valid test2014 test2015 test2017
@@ -183,7 +180,7 @@ do
 
     for i in $(seq 1 $N)
     do
-      $MARIAN/build/marian-scorer -m model/ens-rtl$i/model.npz.best-cross-entropy.npz \
+      $MARIAN/build/marian-scorer -m model/ens-rtl$i/model.npz.best-perplexity.npz \
         -v model/vocab.ende.yml model/vocab.ende.yml -d $GPUS \
         --mini-batch 16 --maxi-batch 100 --maxi-batch-sort trg --n-best --n-best-feature R2L$(expr $i - 1) \
         -t data/$prefix.bpe.en data/$prefix.bpe.en.output.nbest.$(expr $i - 1) > data/$prefix.bpe.en.output.nbest.$i
