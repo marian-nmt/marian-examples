@@ -110,7 +110,7 @@ do
   mkdir -p model/ens$i
   # train model
     $MARIAN/build/marian \
-        --model model/ens$i/model.npz --type transformer --pretrained-model mono/model.npz \
+        --model model/ens$i/model.npz --type transformer \
         --train-sets data/all.bpe.en data/all.bpe.de \
         --max-length 100 \
         --vocabs model/vocab.ende.yml model/vocab.ende.yml \
