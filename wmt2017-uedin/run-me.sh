@@ -9,13 +9,10 @@ then
 fi
 echo Using GPUs: $GPUS
 
-if [ ! $WORKSPACE ]
-then
-  WORKSPACE=9500
-fi
-
+WORKSPACE=9500
 N=4
 B=12
+EPOCHS=10
 
 if [ ! -e $MARIAN/build/marian ]
 then
@@ -107,12 +104,10 @@ then
     cat data/corpus.bpe.de data/corpus.bpe.de data/news.2016.bpe.de > data/all.bpe.de
 fi
 
-for i in `seq 1 $N`
+for i in $(seq 1 $N)
 do
   mkdir -p model/ens$i
   # train model
-  if [ ! -e "model/ens$i/model.npz.best-translation.npz" ]
-  then
     $MARIAN/build/marian \
         --model model/ens$i/model.npz --type s2s \
         --train-sets data/all.bpe.en data/all.bpe.de \
@@ -127,7 +122,7 @@ do
         --beam-size 12 --normalize=1 \
         --valid-mini-batch 64 \
         --overwrite --keep-best \
-        --early-stopping 5 --after-epochs 7 --cost-type=ce-mean-words \
+        --early-stopping 5 --after-epochs $EPOCHS --cost-type=ce-mean-words \
         --log model/ens$i/train.log --valid-log model/ens$i/valid.log \
         --enc-type bidirectional --enc-depth 1 --enc-cell-depth 4 \
         --dec-depth 1 --dec-cell-base-depth 8 --dec-cell-high-depth 1 \
@@ -137,15 +132,12 @@ do
         --optimizer-params 0.9 0.98 1e-09 --clip-norm 5 \
         --devices $GPUS --sync-sgd --seed $i$i$i$i  \
         --exponential-smoothing
-  fi
 done
 
-for i in `seq 1 $N`
+for i in $(seq 1 $N)
 do
   mkdir -p model/ens-rtl$i
   # train model
-  if [ ! -e "model/ens-rtl$i/model.npz.best-translation.npz" ]
-  then
     $MARIAN/build/marian \
         --model model/ens-rtl$i/model.npz --type s2s \
         --train-sets data/all.bpe.en data/all.bpe.de \
@@ -160,7 +152,7 @@ do
         --beam-size 12 --normalize=1 \
         --valid-mini-batch 64 \
         --overwrite --keep-best \
-        --early-stopping 5 --after-epochs 7 --cost-type=ce-mean-words \
+        --early-stopping 5 --after-epochs $EPOCHS --cost-type=ce-mean-words \
         --log model/ens-rtl$i/train.log --valid-log model/ens-rtl$i/valid.log \
         --enc-type bidirectional --enc-depth 1 --enc-cell-depth 4 \
         --dec-depth 1 --dec-cell-base-depth 8 --dec-cell-high-depth 1 \
@@ -170,7 +162,6 @@ do
         --optimizer-params 0.9 0.98 1e-09 --clip-norm 5 \
         --devices $GPUS --sync-sgd --seed $i$i$i$i$i \
         --exponential-smoothing --right-left
-  fi
 done
 
 
@@ -185,7 +176,7 @@ do
 
     for i in $(seq 1 $N)
     do
-      $MARIAN/build/marian-scorer -m model/ens-rtl$i/model.npz.best-cross-entropy.npz \
+      $MARIAN/build/marian-scorer -m model/ens-rtl$i/model.npz.best-perplexity.npz \
         -v model/vocab.ende.yml model/vocab.ende.yml -d $GPUS \
         --mini-batch 16 --maxi-batch 100 --maxi-batch-sort trg --n-best --n-best-feature R2L$(expr $i - 1) \
         -t data/$prefix.bpe.en data/$prefix.bpe.en.output.nbest.$(expr $i - 1) > data/$prefix.bpe.en.output.nbest.$i
