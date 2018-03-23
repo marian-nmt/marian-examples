@@ -16,7 +16,7 @@ mosesdecoder=../tools/moses-scripts
 subword_nmt=../tools/subword-nmt
 
 # tokenize
-for prefix in corpus valid test2014 test2015 test2016
+for prefix in corpus valid test2014 test2015 test2016 test2017
 do
     cat data/$prefix.$SRC \
         | $mosesdecoder/scripts/tokenizer/normalize-punctuation.perl -l $SRC \
@@ -39,7 +39,7 @@ $mosesdecoder/scripts/recaser/train-truecaser.perl -corpus data/corpus.tok.$SRC 
 $mosesdecoder/scripts/recaser/train-truecaser.perl -corpus data/corpus.tok.$TRG -model model/tc.$TRG
 
 # apply truecaser (cleaned training corpus)
-for prefix in corpus valid test2014 test2015 test2016
+for prefix in corpus valid test2014 test2015 test2016 test2017
 do
     $mosesdecoder/scripts/recaser/truecase.perl -model model/tc.$SRC < data/$prefix.tok.$SRC > data/$prefix.tc.$SRC
     test -f data/$prefix.tok.$TRG || continue
@@ -50,7 +50,7 @@ done
 cat data/corpus.tc.$SRC data/corpus.tc.$TRG | $subword_nmt/learn_bpe.py -s $bpe_operations > model/$SRC$TRG.bpe
 
 # apply BPE
-for prefix in corpus valid test2014 test2015 test2016
+for prefix in corpus valid test2014 test2015 test2016 test2017
 do
     $subword_nmt/apply_bpe.py -c model/$SRC$TRG.bpe < data/$prefix.tc.$SRC > data/$prefix.bpe.$SRC
     test -f data/$prefix.tc.$TRG || continue
