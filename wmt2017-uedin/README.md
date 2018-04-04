@@ -3,6 +3,18 @@
 Files and scripts in this folder show how to train a complete WMT-grade system
 based on [Edinburgh's WMT submission description](http://www.aclweb.org/anthology/W17-4739) for en-de.
 
+If you use this, please cite:
+
+Marcin Junczys-Dowmunt , Roman Grundkiewicz, Tomasz Dwojak, Hieu Hoang, Kenneth Heafield, Tom Neckermann, Frank Seide, Ulrich Germann, Alham Fikri Aji, Nikolay Bogoychev, André F. T. Martins, Alexandra Birch (2018). Marian: Fast Neural Machine Translation in C++ (https://arxiv.org/abs/1804.00344)
+
+    @article{junczys2018marian,
+      title={Marian: Fast Neural Machine Translation in C++},
+      author={Marcin Junczys-Dowmunt and Roman Grundkiewicz and Tomasz Dwojak and Hieu Hoang and Kenneth Heafield and Tom Neckermann and Frank Seide and Ulrich Germann and Alham Fikri Aji and Nikolay Bogoychev and André F. T. Martins and Alexandra Birch},
+      journal={arXiv preprint arXiv:1804.00344},
+      url={https://arxiv.org/abs/1804.00344}
+      year={2018}
+    }
+
 This examples script does the following:
 
 * Downloads WMT2017 bilingual data for en-de
@@ -55,3 +67,4 @@ $MARIAN/build/marian \
     --devices $GPUS --sync-sgd --seed $i$i$i$i  \
     --exponential-smoothing
 ```
+
