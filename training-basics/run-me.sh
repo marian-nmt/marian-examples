@@ -1,6 +1,17 @@
 #!/bin/bash -v
 
-MARIAN=../..
+MARIAN=../../build
+
+# if we are in WSL add ''.exe' to the tool names
+if [ -e "/bin/wslpath" ]
+then
+    EXT=.exe
+fi
+
+MARIAN_TRAIN=$MARIAN/marian$EXT
+MARIAN_DECODER=$MARIAN/marian-decoder$EXT
+MARIAN_VOCAB=$MARIAN/marian-vocab$EXT
+MARIAN_SCORER=$MARIAN/marian-scorer$EXT
 
 # set chosen gpus
 GPUS=0
@@ -10,9 +21,9 @@ then
 fi
 echo Using GPUs: $GPUS
 
-if [ ! -e $MARIAN/build/marian ]
+if [ ! -e $MARIAN_TRAIN ]
 then
-    echo "marian is not installed in $MARIAN/build, you need to compile the toolkit first"
+    echo "marian is not installed in $MARIAN, you need to compile the toolkit first"
     exit 1
 fi
 
@@ -38,7 +49,7 @@ fi
 # train model
 if [ ! -e "model/model.npz.best-translation.npz" ]
 then
-    $MARIAN/build/marian \
+    $MARIAN_TRAIN \
         --devices $GPUS \
         --type amun \
         --model model/model.npz \
@@ -60,7 +71,7 @@ fi
 
 # translate dev set
 cat data/newsdev2016.bpe.ro \
-    | $MARIAN/build/marian-decoder -c model/model.npz.best-translation.npz.decoder.yml -d $GPUS -b 12 -n1 \
+    | $MARIAN_DECODER -c model/model.npz.best-translation.npz.decoder.yml -d $GPUS -b 12 -n1 \
       --mini-batch 64 --maxi-batch 10 --maxi-batch-sort src \
     | sed 's/\@\@ //g' \
     | ../tools/moses-scripts/scripts/recaser/detruecase.perl \
@@ -69,7 +80,7 @@ cat data/newsdev2016.bpe.ro \
 
 # translate test set
 cat data/newstest2016.bpe.ro \
-    | $MARIAN/build/marian-decoder -c model/model.npz.best-translation.npz.decoder.yml -d $GPUS -b 12 -n1 \
+    | $MARIAN_DECODER -c model/model.npz.best-translation.npz.decoder.yml -d $GPUS -b 12 -n1 \
       --mini-batch 64 --maxi-batch 10 --maxi-batch-sort src \
     | sed 's/\@\@ //g' \
     | ../tools/moses-scripts/scripts/recaser/detruecase.perl \
