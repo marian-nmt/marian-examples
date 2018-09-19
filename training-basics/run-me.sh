@@ -2,7 +2,7 @@
 
 MARIAN=../../build
 
-# if we are in WSL add ''.exe' to the tool names
+# if we are in WSL, we need to add '.exe' to the tool names
 if [ -e "/bin/wslpath" ]
 then
     EXT=.exe
@@ -62,7 +62,7 @@ then
         --valid-freq 10000 --save-freq 10000 --disp-freq 1000 \
         --valid-metrics cross-entropy translation \
         --valid-sets data/newsdev2016.bpe.ro data/newsdev2016.bpe.en \
-        --valid-script-path ./scripts/validate.sh \
+        --valid-script-path "bash ./scripts/validate.sh" \
         --log model/train.log --valid-log model/valid.log \
         --overwrite --keep-best \
         --seed 1111 --exponential-smoothing \

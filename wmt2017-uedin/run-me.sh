@@ -1,9 +1,8 @@
 #!/bin/bash -v
 
 MARIAN=../../build
-#MARIAN=../../marian-dev/build/x64-Release-Ninja
 
-# if we are in WSL add ''.exe' to the tool names
+# if we are in WSL, we need to add '.exe' to the tool names
 if [ -e "/bin/wslpath" ]
 then
     EXT=.exe
@@ -88,7 +87,7 @@ then
         --mini-batch-fit -w 3500 --maxi-batch 1000 \
         --valid-freq 10000 --save-freq 10000 --disp-freq 1000 \
         --valid-metrics ce-mean-words perplexity translation \
-        --valid-script-path ./scripts/validate.en.sh \
+        --valid-script-path "bash ./scripts/validate.en.sh" \
         --valid-translation-output data/valid.bpe.de.output --quiet-translation \
         --valid-sets data/valid.bpe.de data/valid.bpe.en \
         --valid-mini-batch 64 --beam-size 12 --normalize=1 \
@@ -130,7 +129,7 @@ do
         --valid-freq 5000 --save-freq 5000 --disp-freq 500 \
         --valid-metrics ce-mean-words perplexity translation \
         --valid-sets data/valid.bpe.en data/valid.bpe.de \
-        --valid-script-path ./scripts/validate.sh \
+        --valid-script-path "bash ./scripts/validate.sh" \
         --valid-translation-output data/valid.bpe.en.output --quiet-translation \
         --beam-size 12 --normalize=1 \
         --valid-mini-batch 64 \
@@ -160,7 +159,7 @@ do
         --valid-freq 5000 --save-freq 5000 --disp-freq 500 \
         --valid-metrics ce-mean-words perplexity translation \
         --valid-sets data/valid.bpe.en data/valid.bpe.de \
-        --valid-script-path ./scripts/validate.sh \
+        --valid-script-path "bash ./scripts/validate.sh" \
         --valid-translation-output data/valid.bpe.en.output --quiet-translation \
         --beam-size 12 --normalize=1 \
         --valid-mini-batch 64 \
