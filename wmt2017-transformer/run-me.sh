@@ -1,6 +1,18 @@
 #!/bin/bash -v
 
-MARIAN=../..
+MARIAN=../../build
+
+# if we are in WSL, we need to add '.exe' to the tool names
+if [ -e "/bin/wslpath" ]
+then
+    EXT=.exe
+fi
+
+MARIAN_TRAIN=$MARIAN/marian$EXT
+MARIAN_DECODER=$MARIAN/marian-decoder$EXT
+MARIAN_VOCAB=$MARIAN/marian-vocab$EXT
+MARIAN_SCORER=$MARIAN/marian-scorer$EXT
+
 # set chosen gpus
 GPUS=0
 if [ $# -ne 0 ]
@@ -15,9 +27,9 @@ N=4
 EPOCHS=8
 B=12
 
-if [ ! -e $MARIAN/build/marian ]
+if [ ! -e MARIAN_TRAIN ]
 then
-    echo "marian is not installed in ../../build, you need to compile the toolkit first"
+    echo "marian is not installed in $MARIAN, you need to compile the toolkit first"
     exit 1
 fi
 
@@ -61,14 +73,14 @@ fi
 # create common vocabulary
 if [ ! -e "model/vocab.ende.yml" ]
 then
-    cat data/corpus.bpe.en data/corpus.bpe.de | $MARIAN/build/marian-vocab --max-size 36000 > model/vocab.ende.yml
+    cat data/corpus.bpe.en data/corpus.bpe.de | $MARIAN_VOCAB --max-size 36000 > model/vocab.ende.yml
 fi
 
 # train model
 mkdir -p model.back
 if [ ! -e "model.back/model.npz.best-translation.npz" ]
 then
-    $MARIAN/build/marian \
+    $MARIAN_TRAIN \
         --model model.back/model.npz --type s2s \
         --train-sets data/corpus.bpe.de data/corpus.bpe.en \
         --max-length 100 \
@@ -76,7 +88,7 @@ then
         --mini-batch-fit -w 3500 --maxi-batch 1000 \
         --valid-freq 10000 --save-freq 10000 --disp-freq 1000 \
         --valid-metrics ce-mean-words perplexity translation \
-        --valid-script-path ./scripts/validate.en.sh \
+        --valid-script-path "bash ./scripts/validate.en.sh" \
         --valid-translation-output data/valid.bpe.de.output --quiet-translation \
         --valid-sets data/valid.bpe.de data/valid.bpe.en \
         --valid-mini-batch 64 --beam-size 12 --normalize=1 \
@@ -90,7 +102,7 @@ fi
 
 if [ ! -e "data/news.2016.bpe.en" ]
 then
-    $MARIAN/build/marian-decoder \
+    $MARIAN_DECODER \
       -c model.back/model.npz.best-translation.npz.decoder.yml \
       -i data/news.2016.bpe.de \
       -b 6 --normalize=1 -w 2500 -d $GPUS \
@@ -109,7 +121,7 @@ for i in $(seq 1 $N)
 do
   mkdir -p model/ens$i
   # train model
-    $MARIAN/build/marian \
+    $MARIAN_TRAIN \
         --model model/ens$i/model.npz --type transformer \
         --train-sets data/all.bpe.en data/all.bpe.de \
         --max-length 100 \
@@ -118,7 +130,7 @@ do
         --valid-freq 5000 --save-freq 5000 --disp-freq 500 \
         --valid-metrics ce-mean-words perplexity translation \
         --valid-sets data/valid.bpe.en data/valid.bpe.de \
-        --valid-script-path ./scripts/validate.sh \
+        --valid-script-path "bash ./scripts/validate.sh" \
         --valid-translation-output data/valid.bpe.en.output --quiet-translation \
         --beam-size 12 --normalize=1 \
         --valid-mini-batch 64 \
@@ -138,7 +150,7 @@ for i in $(seq 1 $N)
 do
   mkdir -p model/ens-rtl$i
   # train model
-    $MARIAN/build/marian \
+    $MARIAN_TRAIN \
         --model model/ens-rtl$i/model.npz --type transformer \
         --train-sets data/all.bpe.en data/all.bpe.de \
         --max-length 100 \
@@ -147,7 +159,7 @@ do
         --valid-freq 5000 --save-freq 5000 --disp-freq 500 \
         --valid-metrics ce-mean-words perplexity translation \
         --valid-sets data/valid.bpe.en data/valid.bpe.de \
-        --valid-script-path ./scripts/validate.sh \
+        --valid-script-path  "bash ./scripts/validate.sh" \
         --valid-translation-output data/valid.bpe.en.output --quiet-translation \
         --beam-size 12 --normalize=1 \
         --valid-mini-batch 64 \
@@ -167,14 +179,14 @@ done
 for prefix in valid test2014 test2015 test2017
 do
     cat data/$prefix.bpe.en \
-        | $MARIAN/build/marian-decoder -c model/ens1/model.npz.best-translation.npz.decoder.yml \
+        | $MARIAN_DECODER -c model/ens1/model.npz.best-translation.npz.decoder.yml \
           -m model/ens?/model.npz.best-translation.npz -d $GPUS \
           --mini-batch 16 --maxi-batch 100 --maxi-batch-sort src -w 5000 --n-best --beam-size $B \
         > data/$prefix.bpe.en.output.nbest.0
 
     for i in $(seq 1 $N)
     do
-      $MARIAN/build/marian-scorer -m model/ens-rtl$i/model.npz.best-perplexity.npz \
+      $MARIAN_SCORER -m model/ens-rtl$i/model.npz.best-perplexity.npz \
         -v model/vocab.ende.yml model/vocab.ende.yml -d $GPUS \
         --mini-batch 16 --maxi-batch 100 --maxi-batch-sort trg --n-best --n-best-feature R2L$(expr $i - 1) \
         -t data/$prefix.bpe.en data/$prefix.bpe.en.output.nbest.$(expr $i - 1) > data/$prefix.bpe.en.output.nbest.$i
