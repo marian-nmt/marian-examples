@@ -75,19 +75,19 @@ then
         --log model/train.log --valid-log model/valid.log --tempdir model \
         --overwrite --keep-best \
         --seed 1111 --exponential-smoothing \
-        --normalize=1 --beam-size=6 --quiet-translation
+        --normalize=0.6 --beam-size=6 --quiet-translation
 fi
 
 # translate dev set
 cat data/newsdev2016.ro \
-    | $MARIAN/build/marian-decoder -c model/model.npz.best-bleu-detok.npz.decoder.yml -d $GPUS -b 6 -n1 \
-      --mini-batch 64 --maxi-batch 10 --maxi-batch-sort src > data/newsdev2016.ro.output
+    | $MARIAN/build/marian-decoder -c model/model.npz.best-bleu-detok.npz.decoder.yml -d $GPUS -b 6 -n0.6 \
+      --mini-batch 64 --maxi-batch 100 --maxi-batch-sort src > data/newsdev2016.ro.output
 
 # translate test set
 cat data/newstest2016.ro \
-    | $MARIAN/build/marian-decoder -c model/model.npz.best-bleu-detok.npz.decoder.yml -d $GPUS -b 6 -n1 \
-      --mini-batch 64 --maxi-batch 10 --maxi-batch-sort src > data/newstest2016.ro.output
+    | $MARIAN/build/marian-decoder -c model/model.npz.best-bleu-detok.npz.decoder.yml -d $GPUS -b 6 -n0.6 \
+      --mini-batch 64 --maxi-batch 100 --maxi-batch-sort src > data/newstest2016.ro.output
 
 # calculate bleu scores on dev and test set
 sacreBLEU/sacrebleu.py -t wmt16/dev -l ro-en < data/newsdev2016.ro.output
-sacreBLEU/sacrebleu.py -t wmt16 -l ro-en < data/newstest2016.ro.output
+sacreBLEU/sacrebleu.py -t wmt16 -l ro-en     < data/newstest2016.ro.output
