@@ -51,13 +51,14 @@ then
         --train-sets data/corpus.ro data/corpus.en \
         --vocabs model/vocab.roen.spm model/vocab.roen.spm \
         --dim-vocabs 32000 32000 \
-        --mini-batch-fit -w 5000 \
-        --layer-normalization --dropout-rnn 0.2 --dropout-src 0.1 --dropout-trg 0.1 \
-        --early-stopping 5 \
+        --mini-batch-fit -w 8000 \
+        --layer-normalization --tied-embeddings-all \
+        --dropout-rnn 0.2 --dropout-src 0.1 --dropout-trg 0.1 \
+        --early-stopping 5 --max-length 100 \
         --valid-freq 10000 --save-freq 10000 --disp-freq 1000 \
         --cost-type ce-mean-words --valid-metrics ce-mean-words bleu-detok \
         --valid-sets data/newsdev2016.ro data/newsdev2016.en \
-        --log model/train.log --valid-log model/valid.log \
+        --log model/train.log --valid-log model/valid.log --tempdir model \
         --overwrite --keep-best \
         --seed 1111 --exponential-smoothing \
         --normalize=1 --beam-size=6 --quiet-translation
