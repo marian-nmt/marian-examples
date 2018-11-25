@@ -1,6 +1,2 @@
-data/corpus.*
-data/news*.ro
-data/news*.en
-data/*.output
 model
 sacreBLEU
