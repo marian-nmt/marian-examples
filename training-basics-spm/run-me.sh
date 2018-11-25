@@ -17,7 +17,7 @@ then
 fi
 
 # get our fork of sacrebleu
-git clone https://github.com/marian-nmt/sacreBLEU
+git clone https://github.com/marian-nmt/sacreBLEU.git sacreBLEU
 
 # change into data directory
 cd data

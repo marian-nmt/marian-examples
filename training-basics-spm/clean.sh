@@ -1,3 +1,3 @@
 #!/bin/bash -v
 
-git clean -f
+git clean -f -d -f
