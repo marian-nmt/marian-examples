@@ -19,18 +19,19 @@ fi
 # get our fork of sacrebleu
 git clone https://github.com/marian-nmt/sacreBLEU
 
+# change into data directory
+cd data
+
+# create dev set
+../sacreBLEU/sacrebleu.py -t wmt16/dev -l ro-en --echo src > newsdev2016.ro
+../sacreBLEU/sacrebleu.py -t wmt16/dev -l ro-en --echo ref > newsdev2016.en
+
+# create test set
+../sacreBLEU/sacrebleu.py -t wmt16 -l ro-en --echo src > newstest2016.ro
+../sacreBLEU/sacrebleu.py -t wmt16 -l ro-en --echo ref > newstest2016.en
+
 if [ ! -e "data/corpus.ro" ]
 then
-    cd data
-
-    # create dev set
-    ../sacreBLEU/sacrebleu.py -t wmt16/dev -l ro-en --echo src > newsdev2016.ro
-    ../sacreBLEU/sacrebleu.py -t wmt16/dev -l ro-en --echo ref > newsdev2016.en
-
-    # create test set
-    ../sacreBLEU/sacrebleu.py -t wmt16 -l ro-en --echo src > newstest2016.ro
-    ../sacreBLEU/sacrebleu.py -t wmt16 -l ro-en --echo ref > newstest2016.en
-
     # get En-Ro training data for WMT16
     wget -nc http://www.statmt.org/europarl/v7/ro-en.tgz
     wget -nc http://opus.lingfil.uu.se/download.php?f=SETIMES2/en-ro.txt.zip -O SETIMES2.ro-en.txt.zip
@@ -48,35 +49,34 @@ then
 
     # clean
     rm ro-en.tgz SETIMES2.* corpus.bt.* europarl-*
-    cd ..
 fi
+
+# change back into main directory
+cd ..
 
 # create the model folder
 mkdir -p model
 
 # train model
-if [ ! -e "model/model.npz.best-bleu-detok.npz" ]
-then
-    $MARIAN/build/marian \
-        --devices $GPUS \
-        --type s2s \
-        --model model/model.npz \
-        --train-sets data/corpus.ro data/corpus.en \
-        --vocabs model/vocab.roen.spm model/vocab.roen.spm \
-        --sentencepiece-options '--normalization_rule_tsv=data/norm_romanian.tsv' \
-        --dim-vocabs 32000 32000 \
-        --mini-batch-fit -w 5000 \
-        --layer-normalization --tied-embeddings-all \
-        --dropout-rnn 0.2 --dropout-src 0.1 --dropout-trg 0.1 \
-        --early-stopping 5 --max-length 100 \
-        --valid-freq 10000 --save-freq 10000 --disp-freq 1000 \
-        --cost-type ce-mean-words --valid-metrics ce-mean-words bleu-detok \
-        --valid-sets data/newsdev2016.ro data/newsdev2016.en \
-        --log model/train.log --valid-log model/valid.log --tempdir model \
-        --overwrite --keep-best \
-        --seed 1111 --exponential-smoothing \
-        --normalize=0.6 --beam-size=6 --quiet-translation
-fi
+$MARIAN/build/marian \
+    --devices $GPUS \
+    --type s2s \
+    --model model/model.npz \
+    --train-sets data/corpus.ro data/corpus.en \
+    --vocabs model/vocab.roen.spm model/vocab.roen.spm \
+    --sentencepiece-options '--normalization_rule_tsv=data/norm_romanian.tsv' \
+    --dim-vocabs 32000 32000 \
+    --mini-batch-fit -w 5000 \
+    --layer-normalization --tied-embeddings-all \
+    --dropout-rnn 0.2 --dropout-src 0.1 --dropout-trg 0.1 \
+    --early-stopping 5 --max-length 100 \
+    --valid-freq 10000 --save-freq 10000 --disp-freq 1000 \
+    --cost-type ce-mean-words --valid-metrics ce-mean-words bleu-detok \
+    --valid-sets data/newsdev2016.ro data/newsdev2016.en \
+    --log model/train.log --valid-log model/valid.log --tempdir model \
+    --overwrite --keep-best \
+    --seed 1111 --exponential-smoothing \
+    --normalize=0.6 --beam-size=6 --quiet-translation
 
 # translate dev set
 cat data/newsdev2016.ro \
@@ -90,4 +90,4 @@ cat data/newstest2016.ro \
 
 # calculate bleu scores on dev and test set
 sacreBLEU/sacrebleu.py -t wmt16/dev -l ro-en < data/newsdev2016.ro.output
-sacreBLEU/sacrebleu.py -t wmt16 -l ro-en     < data/newstest2016.ro.output
+sacreBLEU/sacrebleu.py -t wmt16 -l ro-en < data/newstest2016.ro.output
