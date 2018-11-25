@@ -16,9 +16,21 @@ then
     exit 1
 fi
 
+# get our fork of sacrebleu
+git clone https://github.com/marian-nmt/sacreBLEU
+
 if [ ! -e "data/corpus.ro" ]
 then
     cd data
+
+    # create dev set
+    ../sacreBLEU/sacrebleu.py -t wmt16/dev -l ro-en --echo src > newsdev2016.ro
+    ../sacreBLEU/sacrebleu.py -t wmt16/dev -l ro-en --echo ref > newsdev2016.en
+
+    # create test set
+    ../sacreBLEU/sacrebleu.py -t wmt16 -l ro-en --echo src > newstest2016.ro
+    ../sacreBLEU/sacrebleu.py -t wmt16 -l ro-en --echo ref > newstest2016.en
+
     # get En-Ro training data for WMT16
     wget -nc http://www.statmt.org/europarl/v7/ro-en.tgz
     wget -nc http://opus.lingfil.uu.se/download.php?f=SETIMES2/en-ro.txt.zip -O SETIMES2.ro-en.txt.zip
@@ -39,6 +51,7 @@ then
     cd ..
 fi
 
+# create the model folder
 mkdir -p model
 
 # train model
@@ -76,5 +89,5 @@ cat data/newstest2016.ro \
       --mini-batch 64 --maxi-batch 10 --maxi-batch-sort src > data/newstest2016.ro.output
 
 # calculate bleu scores on dev and test set
-../tools/moses-scripts/scripts/generic/multi-bleu-detok.perl data/newsdev2016.en  < data/newsdev2016.ro.output
-../tools/moses-scripts/scripts/generic/multi-bleu-detok.perl data/newstest2016.en < data/newstest2016.ro.output
+sacreBLEU/sacrebleu.py -t wmt16/dev -l ro-en < data/newsdev2016.ro.output
+sacreBLEU/sacrebleu.py -t wmt16 -l ro-en < data/newstest2016.ro.output
