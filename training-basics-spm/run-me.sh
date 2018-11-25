@@ -16,7 +16,7 @@ then
     exit 1
 fi
 
-if [ ! -e "data/corpus.en" ]
+if [ ! -e "data/corpus.ro" ]
 then
     cd data
     # get En-Ro training data for WMT16
@@ -50,8 +50,9 @@ then
         --model model/model.npz \
         --train-sets data/corpus.ro data/corpus.en \
         --vocabs model/vocab.roen.spm model/vocab.roen.spm \
+        --sentencepiece-options '--normalization_rule_tsv=data/norm_romanian.tsv' \
         --dim-vocabs 32000 32000 \
-        --mini-batch-fit -w 8000 \
+        --mini-batch-fit -w 5000 \
         --layer-normalization --tied-embeddings-all \
         --dropout-rnn 0.2 --dropout-src 0.1 --dropout-trg 0.1 \
         --early-stopping 5 --max-length 100 \
@@ -75,5 +76,5 @@ cat data/newstest2016.ro \
       --mini-batch 64 --maxi-batch 10 --maxi-batch-sort src > data/newstest2016.ro.output
 
 # calculate bleu scores on dev and test set
-../tools/moses-scripts/scripts/generic/multi-bleu-detok.perl data/newsdev2016.en < data/newsdev2016.ro.output
+../tools/moses-scripts/scripts/generic/multi-bleu-detok.perl data/newsdev2016.en  < data/newsdev2016.ro.output
 ../tools/moses-scripts/scripts/generic/multi-bleu-detok.perl data/newstest2016.en < data/newstest2016.ro.output
