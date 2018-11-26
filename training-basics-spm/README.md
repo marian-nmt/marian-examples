@@ -91,6 +91,8 @@ To use with a different GPUs than device 0 or more GPUs (here 0 1 2 3) use the c
 
 In this section we repeat the content from the above `run-me.sh` script with explanations. You should be able to copy and paste the commands and follow through all the steps. 
 
+We assume you are running these commands from the examples directory of the main Marian directory tree `marian/examples/training-basics-spm` and that the Marian binaries have been compiled in `marian/build`. The localization of the Marian binary relatively to the current directory is therefore `../../build/marian`.
+
 ### Preparing the test and validation sets
 
 ```
@@ -153,7 +155,7 @@ if unexpected SentencePiece normalization rules are used. You should still repor
 sacreBLEU scores for publications.
 
 ```
-$MARIAN/build/marian \
+../../build/marian \
     --devices $GPUS \
     --type s2s \
     --model model/model.npz \
@@ -185,12 +187,12 @@ to translate the WMT2016 dev set and test set with `marian-decoder`:
 ```
 # translate dev set
 cat data/newsdev2016.ro \
-    | $MARIAN/build/marian-decoder -c model/model.npz.best-bleu-detok.npz.decoder.yml -d $GPUS -b 6 -n0.6 \
+    | ../../build/marian-decoder -c model/model.npz.best-bleu-detok.npz.decoder.yml -d $GPUS -b 6 -n0.6 \
       --mini-batch 64 --maxi-batch 100 --maxi-batch-sort src > data/newsdev2016.ro.output
 
 # translate test set
 cat data/newstest2016.ro \
-    | $MARIAN/build/marian-decoder -c model/model.npz.best-bleu-detok.npz.decoder.yml -d $GPUS -b 6 -n0.6 \
+    | ../../build/marian-decoder -c model/model.npz.best-bleu-detok.npz.decoder.yml -d $GPUS -b 6 -n0.6 \
       --mini-batch 64 --maxi-batch 100 --maxi-batch-sort src > data/newstest2016.ro.output
 ```
 after which BLEU scores for the dev and test set are reported.
@@ -199,7 +201,7 @@ after which BLEU scores for the dev and test set are reported.
 sacreBLEU/sacrebleu.py -t wmt16/dev -l ro-en < data/newsdev2016.ro.output
 sacreBLEU/sacrebleu.py -t wmt16 -l ro-en < data/newstest2016.ro.output
 ```
-You shouled see results somewhere in the area of:
+You should see results somewhere in the area of:
 ```
 
 ```
