@@ -1,6 +1,6 @@
 # Example for Training with Marian and SentencePiece
 
-In this example, we modify the Romanian-English example from `examples/training-basics` to use Tako Kudo's 
+In this example, we modify the Romanian-English example from `examples/training-basics` to use Taku Kudo's 
 [SentencePiece](https://github.com/google/sentencepiece) instead of a complicated pre/prost-processing pipeline. 
 We also replace the evaluation scripts with Matt Post's [SacreBLEU](https://github.com/mjpost/sacreBLEU). 
 
