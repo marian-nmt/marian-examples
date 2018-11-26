@@ -267,7 +267,7 @@ BLEU+case.mixed+lang.ro-en+numrefs.1+smooth.exp+test.wmt16+tok.13a+version.1.2.1
 ## Is Normalization Actually Required?
 
 We also quickly tested if the normalization of Romanian characters is actually neccessary and if there are other methods
-of dealing with the noise. SentencePiece supports a method called subword-regularization ((Kudo 2018)[]) that samples different
+of dealing with the noise. SentencePiece supports a method called subword-regularization ([Kudo 2018](https://arxiv.org/abs/1804.10959)) that samples different
 subword splits at training time; ideally resulting in a more robust translation at inference time.
 
 Here's the table:
