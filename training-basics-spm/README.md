@@ -1,4 +1,61 @@
-# Example for training with Marian
+# Example for training with Marian and SentencePiece
+
+## Building Marian with SentencePiece support
+
+Since version 1.7.0, Marian has support for (SentencePiece)[https://github.com/google/sentencepiece],
+but this needs to be enabled at compile-time. We decided to make the compilation of SentencePiece
+optional as SentencePiece has a number of dependencies - especially Google's Protobuf - that
+are potentially non-trivial to install.
+
+Following the the SentencePiece Readme, we list a couple of packages you would need to
+install for a coule of Ubuntu versions:
+
+On Ubuntu 14.04 LTS (Trusty Tahr):
+
+```
+% sudo apt-get install libprotobuf8 protobuf-compiler libprotobuf-dev
+```
+
+On Ubuntu 16.04 LTS (Xenial Xerus):
+
+```
+% sudo apt-get install libprotobuf9v5 protobuf-compiler libprotobuf-dev
+```
+
+On Ubuntu 17.10 (Artful Aardvark) and Later:
+
+```
+% sudo apt-get install libprotobuf10 protobuf-compiler libprotobuf-dev
+```
+
+For more details see the documentation in the SentencePiece repo:
+https://github.com/marian-nmt/sentencepiece#c-from-source
+
+With these dependencies met, you can compile Marian as follows:
+
+```
+git clone https://github.com/marian-nmt/marian
+cd marian
+mkdir build
+cmake .. -DCMAKE_BUILD_TYPE=Release -DUSE_SENTENCEPIECE=ON
+make -j 8
+```
+
+To test if `marian` has been compiled with SentencePiece support run
+
+```
+./marian --help |& grep sentencepiece
+```
+
+which should display the following new options
+
+```
+  --sentencepiece-alphas VECTOR ...     Sampling factors for SentencePieceVocab; i-th factor corresponds to i-th vocabulary
+  --sentencepiece-options TEXT          Pass-through command-line options to SentencePiece trainer
+  --sentencepiece-max-lines UINT=10000000
+```
+
+##
 
 Files and scripts in this folder have been adapted from the Romanian-English
 sample from https://github.com/rsennrich/wmt16-scripts. We also add the
