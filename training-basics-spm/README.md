@@ -2,7 +2,7 @@
 
 In this example, we modify the Romanian-English example from `examples/training-basics` to use Taku Kudo's 
 [SentencePiece](https://github.com/google/sentencepiece) instead of a complicated pre/prost-processing pipeline. 
-We also replace the evaluation scripts with Matt Post's [SacreBLEU](https://github.com/mjpost/sacreBLEU). 
+We also replace the evaluation scripts with Matt Post's [SacreBLEU](https://github.com/mjpost/sacreBLEU). Both tools greatly simplify the training and evaluation process by providing ways to have reversible hidden preprocessing and repeatable evaluation. 
 
 ## Building Marian with SentencePiece Support
 
