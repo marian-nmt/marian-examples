@@ -185,7 +185,11 @@ for details):
 00EE    69 # î => i
 ```
 
-<!-- @TODO: add example for ../../build/spm_normalize --normalization_rule_tsv=data/romanian.tsv -->
+The effect of normalization can be inspected via the following command:
+```
+cat data/newsdev2016.ro | ../../build/spm_normalize --normalization_rule_tsv=data/norm_romanian.tsv | less
+```
+Notice how all diacritics are gone. 
 
 ### Training the NMT model
 
@@ -196,7 +200,7 @@ vocabulary. When the same vocabulary file is specified multiple times - like in 
 vocabulary is built for the union of the corresponding training files. This also enables us to use
 tied embeddings (`--tied-embeddings-all`). The SentencePiece training process takes a couple of 
 minutes depending on the input data size. The same `*.spm` can be later reused for other experiments
-with the same language pair and training is then of course omitted. 
+with the same language pair and training is then of course omitted.
 
 We can pass the Romanian-specific normalizaton rules via the `--sentencepiece-options` command line
 argument. The values of this option are passed on to the SentencePiece trainer, note the required single
@@ -239,7 +243,12 @@ mkdir model
 The training should stop if cross-entropy on the validation set
 stops improving. Depending on the number of and generation of GPUs you are using that may take a while.
 
-<!-- @TODO: add example for ../../build/spm_encode/spm_decode --model=model/vocab.roen.spm -->
+To inspect the created SentencePiece model `model/vocab.roen.spm`, you can now segment any Romanian or English
+text with the following command:
+```
+cat data/newsdev2016.ro | ../../build/spm_encode --model=model/vocab.roen.spm | less
+```
+Notice how the text is not only split, but also normalized with regard to diacritics. 
 
 ### Translating the test and validation sets with evaluation
 
@@ -292,7 +301,7 @@ Here's the table:
 |------------------|------|------|
 | UEdin WMT16      | 35.3 | 33.9 |
 | old-prepro       | 35.9 | 34.5 |
-| SPM-raw          | 35.5 |      |
+| SPM-raw          | 35.6 | 33.0 |
 | SPM-raw+sampling | 35.5 |      |
 | SPM-normalized   | 36.5 | 35.1 |
 
