@@ -192,7 +192,9 @@ raw training and validation data into Marian. A single joint SentencePiece model
 `model/vocab.roen.spm`. The `*.spm` suffix is required and tells Marian to train a SentencePiece
 vocabulary. When the same vocabulary file is specified multiple times - like in this example - a single
 vocabulary is built for the union of the corresponding training files. This also enables us to use
-tied embeddings (`--tied-embeddings-all`).
+tied embeddings (`--tied-embeddings-all`). The SentencePiece training process takes a couple of 
+minutes depending on the input data size. The same `*.spm` can be later reused for other experiments
+with the same language pair and training is then of course omitted. 
 
 We can pass the Romanian-specific normalizaton rules via the `--sentencepiece-options` command line
 argument. The values of this option are passed on to the SentencePiece trainer, note the required single
