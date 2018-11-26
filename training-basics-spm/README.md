@@ -185,6 +185,10 @@ sacreBLEU scores for publications.
 We are training of four GPUs defined with `--devices 0 1 2 3`. Change this to the required number of GPUs.
 
 ```
+# create the model directory
+mkdir model
+
+# train the model
 ../../build/marian \
     --devices 0 1 2 3 \
     --type s2s \
