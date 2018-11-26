@@ -73,8 +73,8 @@ sample from https://github.com/rsennrich/wmt16-scripts. We also add the
 back-translated data from
 http://data.statmt.org/rsennrich/wmt16_backtranslations/ as desribed in
 http://www.aclweb.org/anthology/W16-2323. In our experiments,
-we get a single model that is a good deal than the ensemble from
- the Edinburgh WMT2016 paper.
+we get a single model that is a good deal better than the ensemble from
+the Edinburgh WMT2016 system submission paper.
 
 Assuming one GPU, to execute the complete example type:
 
@@ -87,7 +87,7 @@ No preprocessing is required as the Marian command will train a SentencePiece vo
 the raw text. Next the translation model will be trained and after convergence, the dev and test
 sets are translated and evaluated with sacreBLEU.
 
-To use with a different GPUs than device 0 or more GPUs (here 0 1 2 3) use the command below:
+To use with a different GPU than device 0 or more GPUs (here 0 1 2 3) use the command below:
 
 ```
 ./run-me.sh 0 1 2 3
