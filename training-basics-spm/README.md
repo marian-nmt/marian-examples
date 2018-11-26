@@ -93,13 +93,55 @@ In this section we repeat the content from the above `run-me.sh` script with exp
 
 ### Preparing the test and validation sets
 
+```
+# get our fork of sacrebleu
+git clone https://github.com/marian-nmt/sacreBLEU.git sacreBLEU
+
+# create dev set
+sacreBLEU/sacrebleu.py -t wmt16/dev -l ro-en --echo src > data/newsdev2016.ro
+sacreBLEU/sacrebleu.py -t wmt16/dev -l ro-en --echo ref > data/newsdev2016.en
+
+# create test set
+sacreBLEU/sacrebleu.py -t wmt16 -l ro-en --echo src > data/newstest2016.ro
+sacreBLEU/sacrebleu.py -t wmt16 -l ro-en --echo ref > data/newstest2016.en
+```
+
 ### Downloading the training files
+
+```
+# change into data directory
+cd data
+
+# get En-Ro training data for WMT16
+wget -nc http://www.statmt.org/europarl/v7/ro-en.tgz
+wget -nc http://opus.lingfil.uu.se/download.php?f=SETIMES2/en-ro.txt.zip -O SETIMES2.ro-en.txt.zip
+wget -nc http://data.statmt.org/rsennrich/wmt16_backtranslations/ro-en/corpus.bt.ro-en.en.gz
+wget -nc http://data.statmt.org/rsennrich/wmt16_backtranslations/ro-en/corpus.bt.ro-en.ro.gz
+
+# extract data
+tar -xf ro-en.tgz
+unzip SETIMES2.ro-en.txt.zip
+gzip -d corpus.bt.ro-en.en.gz corpus.bt.ro-en.ro.gz
+
+# create corpus files
+cat europarl-v7.ro-en.en SETIMES2.en-ro.en corpus.bt.ro-en.en > corpus.en
+cat europarl-v7.ro-en.ro SETIMES2.en-ro.ro corpus.bt.ro-en.ro > corpus.ro
+
+# clean
+rm ro-en.tgz SETIMES2.* corpus.bt.* europarl-*
+
+# change back into main directory
+cd ..
+```
 
 ### Training the NMT model
 
 Next, we execute a training run with `marian`. Note how the training command is called passing the 
 raw training and validation data into Marian. A single joint SentencePiece model will be saved to 
-`model/vocab.roen.spm`. 
+`model/vocab.roen.spm`. The `*.spm` suffix is required and tells Marian to train a SentencePiece 
+vocabulary. When the same vocabulary file is specified multiple times - like in this example - a single
+vocabulary is built for the union of the corresponding training files. This also enables us to use
+tied embeddings (`--tied-embeddings-all`).
 
 ```
 $MARIAN/build/marian \
@@ -140,11 +182,13 @@ cat data/newstest2016.ro \
     | $MARIAN/build/marian-decoder -c model/model.npz.best-bleu-detok.npz.decoder.yml -d $GPUS -b 6 -n0.6 \
       --mini-batch 64 --maxi-batch 100 --maxi-batch-sort src > data/newstest2016.ro.output
 ```
-after which BLEU scores for the dev and test set are reported. Results should
-be somewhere in the area of:
-
+after which BLEU scores for the dev and test set are reported.
 ```
 # calculate bleu scores on dev and test set
 sacreBLEU/sacrebleu.py -t wmt16/dev -l ro-en < data/newsdev2016.ro.output
 sacreBLEU/sacrebleu.py -t wmt16 -l ro-en < data/newstest2016.ro.output
+```
+You shouled see results somewhere in the area of:
+```
+
 ```
