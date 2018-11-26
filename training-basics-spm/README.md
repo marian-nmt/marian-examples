@@ -136,6 +136,30 @@ rm ro-en.tgz SETIMES2.* corpus.bt.* europarl-*
 cd ..
 ```
 
+### Normalization of Romanian diacritics with SentencePiece
+
+It seems that the training data is quite noisy and multiple similar characters are used in place of the one correct character.
+Barry Haddow from Edinburgh who created the original Python scripts noticed that removing diacritics on the Romanian side leads to a significant improvment in translation quality. And indeed we saw gains of up to 2 BLEU points due to normalization versus unnormalized text. 
+
+SentencePiece allows to specify normalization or replacement tables for character sequences. These replacements are applied before tokenization/segmentation and included in the SentencePiece model. Based on these preprocessing scripts from `test`, we manually create a tab-separated normalization rule file `data/norm_romanian.tsv` looking like this (see the [SentencePiece documentation on normalization](https://) for details):
+
+```
+015E    53 # Ş => S
+015F    73 # ş => s
+0162    54 # Ţ => T
+0163    74 # ţ => t
+0218    53 # Ș => S
+0219    73 # ș => s
+021A    54 # Ț => T
+021B    74 # ț => t
+0102    41 # Ă => A
+0103    61 # ă => a
+00C2    41 # Â => A
+00E2    61 # â => a
+00CE    49 # Î => I
+00EE    69 # î => i
+```
+
 ### Training the NMT model
 
 Next, we execute a training run with `marian`. Note how the training command is called passing the 
@@ -147,7 +171,7 @@ tied embeddings (`--tied-embeddings-all`).
 
 We can pass the Romanian-specific normalizaton rules via the `--sentencepiece-options` command line
 argument. The values of this option are passed on to the SentencePiece trainer, note the required single
-quotes around the SentencePiece options: `--sentencepiece-options '--normalization_rule_tsv=data/norm_romanian.tsv'`
+quotes around the SentencePiece options: `--sentencepiece-options '--normalization_rule_tsv=data/norm_romanian.tsv'`.
 
 Another new feature is the `bleu-detok` validation metric. When used with SentencePiece this should
 give you in-training BLEU scores that are very close to sacreBLEU's scores. Differences may appear 
