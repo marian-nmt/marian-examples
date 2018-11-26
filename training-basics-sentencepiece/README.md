@@ -72,11 +72,11 @@ Files and scripts in this folder have been adapted from the Romanian-English
 sample from https://github.com/rsennrich/wmt16-scripts. We also add the
 back-translated data from
 http://data.statmt.org/rsennrich/wmt16_backtranslations/ as desribed in
-http://www.aclweb.org/anthology/W16-2323. The resulting system should be
-competitive or even slightly better than reported in the Edinburgh WMT2016
-paper.
+http://www.aclweb.org/anthology/W16-2323. In our experiments,
+we get a single model that is a good deal than the ensemble from
+ the Edinburgh WMT2016 paper.
 
-Assuming you one GPU, to execute the complete example type:
+Assuming one GPU, to execute the complete example type:
 
 ```
 ./run-me.sh
