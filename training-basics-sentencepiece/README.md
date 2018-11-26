@@ -279,8 +279,8 @@ Here's the table:
 | raw+sampling |      |      |
 
 We see that keeping the noise untouched (raw) results indeed in the worst of the three system, normalization (normalized) is best,
-closely followed by sampled subwords splits (raw+sampling). This is an interesting result: although normalization is generally better
-it is not trivial to discover the problem in the first place. Creating a normalization table is another added difficulty and on top of
+closely followed by sampled subwords splits (raw+sampling). This is an interesting result: although normalization is generally better,
+it is not trivial to discover the problem in the first place. Creating a normalization table is another added difficulty - and on top of
 that normalization breaks reversibility. Subword sampling seems to be a viable alternative when dealing with character-level noise with
 no added complexity compared to raw text. It does however take longer to converge, being a regularization method.
 
