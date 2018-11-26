@@ -274,7 +274,9 @@ BLEU+case.mixed+lang.ro-en+numrefs.1+smooth.exp+test.wmt16+tok.13a+version.1.2.1
 
 We also quickly tested if the normalization of Romanian characters is actually neccessary and if there are other methods
 of dealing with the noise. SentencePiece supports a method called subword-regularization ([Kudo 2018](https://arxiv.org/abs/1804.10959)) that samples different
-subword splits at training time; ideally resulting in a more robust translation at inference time.
+subword splits at training time; ideally resulting in a more robust translation at inference time. You can enable sampling for the source language by replacing
+this line `--sentencepiece-options '--normalization_rule_tsv=data/norm_romanian.tsv'` with `--sentencepiece-alphas 0.2 0`; the sampling rate was recommended
+by [Kudo 2018](https://arxiv.org/abs/1804.10959).
 
 We compare against the University of Edinburgh's WMT16 submission (UEdin WMT16 - this is a Nematus ensemble with BPE and normalization),
 and against our own old example from `marian/examples/training-basics` (old-prepro - single Marian model with complex preprocessing pipeline,
