@@ -198,7 +198,8 @@ We can pass the Romanian-specific normalizaton rules via the `--sentencepiece-op
 argument. The values of this option are passed on to the SentencePiece trainer, note the required single
 quotes around the SentencePiece options: `--sentencepiece-options '--normalization_rule_tsv=data/norm_romanian.tsv'`.
 
-Another new feature is the `bleu-detok` validation metric. When used with SentencePiece this should
+Another new feature is the `bleu-detok` validation metric which can be used when SentencePiece support
+is compiled into Marian. Since SentencePiece is a reversible tokenizer, this should
 give you in-training BLEU scores that are very close to sacreBLEU's scores. Differences may appear
 if unexpected SentencePiece normalization rules are used. You should still report only official
 sacreBLEU scores for publications.
