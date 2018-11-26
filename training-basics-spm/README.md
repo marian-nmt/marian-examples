@@ -91,7 +91,7 @@ To use with a different GPUs than device 0 or more GPUs (here 0 1 2 3) use the c
 
 In this section we repeat the content from the above `run-me.sh` script with explanations. You should be able to copy and paste the commands and follow through all the steps. 
 
-We assume you are running these commands from the examples directory of the main Marian directory tree `marian/examples/training-basics-spm` and that the Marian binaries have been compiled in `marian/build`. The localization of the Marian binary relatively to the current directory is therefore `../../build/marian`.
+We assume you are running these commands from the examples directory of the main Marian directory tree `marian/examples/training-basics-spm` and that the Marian binaries have been compiled in `marian/build`. The localization of the Marian binary relative to the current directory is therefore `../../build/marian`.
 
 ### Preparing the test and validation sets
 
@@ -154,9 +154,11 @@ give you in-training BLEU scores that are very close to sacreBLEU's scores. Diff
 if unexpected SentencePiece normalization rules are used. You should still report only official
 sacreBLEU scores for publications.
 
+We are training of four GPUs defined with `--devices 0 1 2 3`. Change this to the required number of GPUs.
+
 ```
 ../../build/marian \
-    --devices $GPUS \
+    --devices 0 1 2 3 \
     --type s2s \
     --model model/model.npz \
     --train-sets data/corpus.ro data/corpus.en \
@@ -187,12 +189,12 @@ to translate the WMT2016 dev set and test set with `marian-decoder`:
 ```
 # translate dev set
 cat data/newsdev2016.ro \
-    | ../../build/marian-decoder -c model/model.npz.best-bleu-detok.npz.decoder.yml -d $GPUS -b 6 -n0.6 \
+    | ../../build/marian-decoder -c model/model.npz.best-bleu-detok.npz.decoder.yml -d 0 1 2 3 -b 6 -n0.6 \
       --mini-batch 64 --maxi-batch 100 --maxi-batch-sort src > data/newsdev2016.ro.output
 
 # translate test set
 cat data/newstest2016.ro \
-    | ../../build/marian-decoder -c model/model.npz.best-bleu-detok.npz.decoder.yml -d $GPUS -b 6 -n0.6 \
+    | ../../build/marian-decoder -c model/model.npz.best-bleu-detok.npz.decoder.yml -d 0 1 2 3 -b 6 -n0.6 \
       --mini-batch 64 --maxi-batch 100 --maxi-batch-sort src > data/newstest2016.ro.output
 ```
 after which BLEU scores for the dev and test set are reported.
