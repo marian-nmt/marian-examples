@@ -1,4 +1,4 @@
-# Example for Training with Marian and SentencePiece
+# Marian with Built-in SentencePiece
 
 In this example, we modify the Romanian-English example from `examples/training-basics` to use Taku Kudo's 
 [SentencePiece](https://github.com/google/sentencepiece) instead of a complicated pre/prost-processing pipeline. 
