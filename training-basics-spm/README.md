@@ -60,7 +60,7 @@ which should display the following new options:
   --sentencepiece-max-lines UINT=10000000
 ```
 
-## Walkthrough
+## Execute the Example
 
 Files and scripts in this folder have been adapted from the Romanian-English
 sample from https://github.com/rsennrich/wmt16-scripts. We also add the
@@ -78,7 +78,8 @@ Assuming you one GPU, to execute the complete example type:
 
 which downloads the Romanian-English training files and concatenates them into training files. 
 No preprocessing is required as the Marian command will train a SentencePiece vocabulary from
-the raw text. 
+the raw text. Next the translation model will be trained and after convergence, the dev and test
+sets are translated and evaluated with sacreBLEU.
 
 To use with a different GPUs than device 0 or more GPUs (here 0 1 2 3) use the command below:
 
@@ -86,7 +87,17 @@ To use with a different GPUs than device 0 or more GPUs (here 0 1 2 3) use the c
 ./run-me.sh 0 1 2 3
 ```
 
-Next it executes a training run with `marian`. Note how the training command is called passing the 
+## Step-by-step Walkthrough
+
+In this section we repeat the content from the above `run-me.sh` script with explanations. You should be able to copy and paste the commands and follow through all the steps. 
+
+### Preparing the test and validation sets
+
+### Downloading the training files
+
+### Training the NMT model
+
+Next, we execute a training run with `marian`. Note how the training command is called passing the 
 raw training and validation data into Marian. A single joint SentencePiece model will be saved to 
 `model/vocab.roen.spm`. 
 
@@ -111,6 +122,8 @@ $MARIAN/build/marian \
     --seed 1111 --exponential-smoothing \
     --normalize=0.6 --beam-size=6 --quiet-translation
 ```
+
+### Translating the test and validation sets with evaluation
 
 After training (the training should stop if cross-entropy on the validation set
 stops improving) the model with the highest translation validation score is used
