@@ -91,7 +91,7 @@ To use with a different GPUs than device 0 or more GPUs (here 0 1 2 3) use the c
 
 In this section we repeat the content from the above `run-me.sh` script with explanations. You should be able to copy and paste the commands and follow through all the steps. 
 
-We assume you are running these commands from the examples directory of the main Marian directory tree `marian/examples/training-basics-spm` and that the Marian binaries have been compiled in `marian/build`. The localization of the Marian binary relative to the current directory is therefore `../../build/marian`.
+We assume you are running these commands from the examples directory of the main Marian directory tree `marian/examples/training-basics-sentencepiece` and that the Marian binaries have been compiled in `marian/build`. The localization of the Marian binary relative to the current directory is therefore `../../build/marian`.
 
 ### Preparing the test and validation sets
 
