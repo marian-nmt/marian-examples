@@ -185,6 +185,8 @@ for details):
 00EE    69 # î => i
 ```
 
+<!-- @TODO: add example for ../../build/spm_normalize --normalization_rule_tsv=data/romanian.tsv -->
+
 ### Training the NMT model
 
 Next, we execute a training run with `marian`. Note how the training command is called passing the
@@ -237,6 +239,8 @@ mkdir model
 The training should stop if cross-entropy on the validation set
 stops improving. Depending on the number of and generation of GPUs you are using that may take a while.
 
+<!-- @TODO: add example for ../../build/spm_encode/spm_decode --model=model/vocab.roen.spm -->
+
 ### Translating the test and validation sets with evaluation
 
 After training, the model with the highest translation validation score is used
@@ -248,13 +252,13 @@ normalization and segmentation on the fly. Similarly, sacreBLEU expects raw text
 ```
 # translate dev set
 cat data/newsdev2016.ro \
-    | ../../build/marian-decoder -c model/model.npz.best-bleu-detok.npz.decoder.yml -d 0 1 2 3 -b 6 -n0.6 \
-      --mini-batch 64 --maxi-batch 100 --maxi-batch-sort src > data/newsdev2016.ro.output
+    | ../../build/marian-decoder -c model/model.npz.best-bleu-detok.npz.decoder.yml -d 0 1 2 3 \
+    > data/newsdev2016.ro.output
 
 # translate test set
 cat data/newstest2016.ro \
-    | ../../build/marian-decoder -c model/model.npz.best-bleu-detok.npz.decoder.yml -d 0 1 2 3 -b 6 -n0.6 \
-      --mini-batch 64 --maxi-batch 100 --maxi-batch-sort src > data/newstest2016.ro.output
+    | ../../build/marian-decoder -c model/model.npz.best-bleu-detok.npz.decoder.yml -d 0 1 2 3 \
+    > data/newstest2016.ro.output
 ```
 after which BLEU scores for the dev and test set are reported.
 ```
