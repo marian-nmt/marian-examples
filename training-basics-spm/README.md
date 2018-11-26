@@ -13,19 +13,19 @@ install for a coule of Ubuntu versions:
 On Ubuntu 14.04 LTS (Trusty Tahr):
 
 ```
-% sudo apt-get install libprotobuf8 protobuf-compiler libprotobuf-dev
+sudo apt-get install libprotobuf8 protobuf-compiler libprotobuf-dev
 ```
 
 On Ubuntu 16.04 LTS (Xenial Xerus):
 
 ```
-% sudo apt-get install libprotobuf9v5 protobuf-compiler libprotobuf-dev
+sudo apt-get install libprotobuf9v5 protobuf-compiler libprotobuf-dev
 ```
 
 On Ubuntu 17.10 (Artful Aardvark) and Later:
 
 ```
-% sudo apt-get install libprotobuf10 protobuf-compiler libprotobuf-dev
+sudo apt-get install libprotobuf10 protobuf-compiler libprotobuf-dev
 ```
 
 For more details see the documentation in the SentencePiece repo:

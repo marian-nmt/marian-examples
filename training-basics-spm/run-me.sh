@@ -19,19 +19,19 @@ fi
 # get our fork of sacrebleu
 git clone https://github.com/marian-nmt/sacreBLEU.git sacreBLEU
 
-# change into data directory
-cd data
-
 # create dev set
-../sacreBLEU/sacrebleu.py -t wmt16/dev -l ro-en --echo src > newsdev2016.ro
-../sacreBLEU/sacrebleu.py -t wmt16/dev -l ro-en --echo ref > newsdev2016.en
+sacreBLEU/sacrebleu.py -t wmt16/dev -l ro-en --echo src > data/newsdev2016.ro
+sacreBLEU/sacrebleu.py -t wmt16/dev -l ro-en --echo ref > data/newsdev2016.en
 
 # create test set
-../sacreBLEU/sacrebleu.py -t wmt16 -l ro-en --echo src > newstest2016.ro
-../sacreBLEU/sacrebleu.py -t wmt16 -l ro-en --echo ref > newstest2016.en
+sacreBLEU/sacrebleu.py -t wmt16 -l ro-en --echo src > data/newstest2016.ro
+sacreBLEU/sacrebleu.py -t wmt16 -l ro-en --echo ref > data/newstest2016.en
 
 if [ ! -e "data/corpus.ro" ]
 then
+    # change into data directory
+    cd data
+
     # get En-Ro training data for WMT16
     wget -nc http://www.statmt.org/europarl/v7/ro-en.tgz
     wget -nc http://opus.lingfil.uu.se/download.php?f=SETIMES2/en-ro.txt.zip -O SETIMES2.ro-en.txt.zip
@@ -49,10 +49,11 @@ then
 
     # clean
     rm ro-en.tgz SETIMES2.* corpus.bt.* europarl-*
+
+    # change back into main directory
+    cd ..
 fi
 
-# change back into main directory
-cd ..
 
 # create the model folder
 mkdir -p model
