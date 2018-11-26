@@ -95,6 +95,8 @@ We assume you are running these commands from the examples directory of the main
 
 ### Preparing the test and validation sets
 
+We can use SacreBLEU to produce the original WMT16 development and test sets for Romanian-English. We first clone the SacreBLEU repository from our fork and then generate the test files. 
+
 ```
 # get our fork of sacrebleu
 git clone https://github.com/marian-nmt/sacreBLEU.git sacreBLEU
@@ -109,6 +111,8 @@ sacreBLEU/sacrebleu.py -t wmt16 -l ro-en --echo ref > data/newstest2016.en
 ```
 
 ### Downloading the training files
+
+Similarly, we download the training files from different sources and concatenate them into two training files. Note, there is no preprocessing whatsoever. Downloading may take a while, the servers are not particularly fast. 
 
 ```
 # change into data directory
@@ -139,9 +143,9 @@ cd ..
 ### Normalization of Romanian diacritics with SentencePiece
 
 It seems that the training data is quite noisy and multiple similar characters are used in place of the one correct character.
-Barry Haddow from Edinburgh who created the original Python scripts noticed that removing diacritics on the Romanian side leads to a significant improvment in translation quality. And indeed we saw gains of up to 2 BLEU points due to normalization versus unnormalized text. 
+Barry Haddow from Edinburgh who created the original normalization Python scripts noticed that removing diacritics on the Romanian side leads to a significant improvment in translation quality. And indeed we saw gains of up to 2 BLEU points due to normalization versus unnormalized text. The original scripts are located in the old Romanian-English example folder in `marian/examples/training-basics/scripts`. We do not need to use them here.
 
-SentencePiece allows to specify normalization or replacement tables for character sequences. These replacements are applied before tokenization/segmentation and included in the SentencePiece model. Based on these preprocessing scripts from `test`, we manually create a tab-separated normalization rule file `data/norm_romanian.tsv` looking like this (see the [SentencePiece documentation on normalization](https://) for details):
+SentencePiece allows to specify normalization or replacement tables for character sequences. These replacements are applied before tokenization/segmentation and included in the SentencePiece model. Based on the mentioned preprocessing scripts, we manually create a tab-separated normalization rule file `data/norm_romanian.tsv` like this (see the [SentencePiece documentation on normalization](https://github.com/google/sentencepiece/blob/master/doc/normalization.md) for details):
 
 ```
 015E    53 # Ş => S
