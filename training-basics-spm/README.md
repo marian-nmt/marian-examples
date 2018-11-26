@@ -235,7 +235,7 @@ after which BLEU scores for the dev and test set are reported.
 sacreBLEU/sacrebleu.py -t wmt16/dev -l ro-en < data/newsdev2016.ro.output
 sacreBLEU/sacrebleu.py -t wmt16 -l ro-en < data/newstest2016.ro.output
 ```
-You should see results somewhere in the area of:
+You should see results somewhere in the area of 36.5 BLEU for the dev set and 35.1 BLEU for the test set. This is actually a bit better than for the BPE version from `marian/examples/training-basics` with the complex preprocessing.
 ```
 BLEU+case.mixed+lang.ro-en+numrefs.1+smooth.exp+test.wmt16/dev+tok.13a+version.1.2.12 = 36.5 67.9/42.7/29.4/20.9 (BP = 1.000 ratio = 1.006 hyp_len = 49816 ref_len = 49526)
 BLEU+case.mixed+lang.ro-en+numrefs.1+smooth.exp+test.wmt16+tok.13a+version.1.2.12 = 35.1 66.6/41.3/28.0/19.6 (BP = 1.000 ratio = 1.005 hyp_len = 47804 ref_len = 47562)
