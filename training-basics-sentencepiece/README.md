@@ -1,10 +1,14 @@
-# Marian with Built-in SentencePiece
+# Tutorial: Marian with Built-in SentencePiece
 
 In this example, we modify the Romanian-English example from `examples/training-basics` to use Taku Kudo's
 [SentencePiece](https://github.com/google/sentencepiece) instead of a complicated pre/prost-processing pipeline.
 We also replace the evaluation scripts with Matt Post's [SacreBLEU](https://github.com/mjpost/sacreBLEU).
 Both tools greatly simplify the training and evaluation process by providing ways to have reversible hidden
 preprocessing and repeatable evaluation.
+
+The model we build here is a simple Nematus-style shallow RNN model, similar to the one in the older
+`marian/examples/training-basics` folder. We will soon update our WMT Transformer examples to use
+SentencePiece.
 
 ## Building Marian with SentencePiece Support
 
@@ -260,15 +264,25 @@ BLEU+case.mixed+lang.ro-en+numrefs.1+smooth.exp+test.wmt16/dev+tok.13a+version.1
 BLEU+case.mixed+lang.ro-en+numrefs.1+smooth.exp+test.wmt16+tok.13a+version.1.2.12 = 35.1 66.6/41.3/28.0/19.6 (BP = 1.000 ratio = 1.005 hyp_len = 47804 ref_len = 47562)
 ```
 
-## Is normalization actually required?
+## Is Normalization Actually Required?
 
 We also quickly tested if the normalization of Romanian characters is actually neccessary and if there are other methods
-of dealing with the noise. Here's the table:
+of dealing with the noise. SentencePiece supports a method called subword-regularization ((Kudo 2018)[]) that samples different
+subword splits at training time; ideally resulting in a more robust translation at inference time.
 
-|            | dev  | test |
-|------------|------|------|
-| raw        |      |      |
-| normalized | 36.5 | 35.1 |
-| sampling   |      |      |
+Here's the table:
 
-That's all folks.
+|              | dev  | test |
+|--------------|------|------|
+| raw text     |      |      |
+| normalized   | 36.5 | 35.1 |
+| raw+sampling |      |      |
+
+We see that keeping the noise untouched (raw) results indeed in the worst of the three system, normalization (normalized) is best,
+closely followed by sampled subwords splits (raw+sampling). This is an interesting result: although normalization is generally better
+it is not trivial to discover the problem in the first place. Creating a normalization table is another added difficulty and on top of
+that normalization breaks reversibility. Subword sampling seems to be a viable alternative when dealing with character-level noise with
+no added complexity compared to raw text. It does however take longer to converge, being a regularization method.
+
+That's all folks. More to come soon.
+
