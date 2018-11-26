@@ -207,7 +207,7 @@ We are training of four GPUs defined with `--devices 0 1 2 3`. Change this to th
 ```
 
 The training should stop if cross-entropy on the validation set
-stops improving.
+stops improving. Depending on the number of and generation of GPUs you are using that may take a while.
 
 ### Translating the test and validation sets with evaluation
 
