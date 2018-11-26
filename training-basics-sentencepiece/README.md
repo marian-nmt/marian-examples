@@ -270,19 +270,29 @@ We also quickly tested if the normalization of Romanian characters is actually n
 of dealing with the noise. SentencePiece supports a method called subword-regularization ([Kudo 2018](https://arxiv.org/abs/1804.10959)) that samples different
 subword splits at training time; ideally resulting in a more robust translation at inference time.
 
+We compare against the University of Edinburgh's WMT16 submission (UEdin WMT16 - this is a Nematus ensemble with BPE and normalization),
+and against our own old example from `marian/examples/training-basics` (old-prepro - single Marian model with complex preprocessing pipeline,
+including tokenization, normalization, BPE). Raw training data should be identical for all models.
+
 Here's the table:
 
-|              | dev  | test |
-|--------------|------|------|
-| raw text     |      |      |
-| normalized   | 36.5 | 35.1 |
-| raw+sampling |      |      |
+| system           | dev  | test |
+|------------------|------|------|
+| UEdin WMT16      | 35.3 | 33.9 |
+| old-prepro       | 35.9 | 34.5 |
+| SPM-raw          | 35.5 |      |
+| SPM-raw+sampling | 35.5 |      |
+| SPM-normalized   | 36.5 | 35.1 |
 
-We see that keeping the noise untouched (raw) results indeed in the worst of the three system, normalization (normalized) is best,
-closely followed by sampled subwords splits (raw+sampling). This is an interesting result: although normalization is generally better,
-it is not trivial to discover the problem in the first place. Creating a normalization table is another added difficulty - and on top of
-that normalization breaks reversibility. Subword sampling seems to be a viable alternative when dealing with character-level noise with
-no added complexity compared to raw text. It does however take longer to converge, being a regularization method.
+The SentencePiece models are all better than the original Edinburgh systems (an emsemble!), but normalization is important. 
+We see that keeping the noise untouched (SPM-raw) results indeed in the worst of the three system, normalization (SPM-normalized) is best.
+Surprisingly there is no gain from sampled subwords splits (SPM-raw+sampling) over deterministic splits. 
+
+This is an interesting result: I would expected subword-sampling to help at least a little bit, but no. It seems we need to stick with
+normalization which is unfortunate for the following reasons: it is not trivial to discover the normalization problem in the first place and 
+creating a normalization table is another added difficulty; on top of that normalization breaks reversibility. The reversiblity problem is a 
+little less annoying if we only normalize the source and more-or-less keep the target (as in this case). For translation into Romanian we would 
+probably need to keep the diacritics. 
 
 That's all folks. More to come soon.
 
