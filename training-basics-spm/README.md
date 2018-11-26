@@ -1,10 +1,10 @@
-# Example for training with Marian and SentencePiece
+# Example for Training with Marian and SentencePiece
 
 In this example, we modify the Romanian-English example from `examples/training-basics` to use Tako Kudo's 
 [SentencePiece](https://github.com/google/sentencepiece) instead of a complicated pre/prost-processing pipeline. 
 We also replace the evaluation scripts with Matt Post's [SacreBLEU](https://github.com/mjpost/sacreBLEU). 
 
-## Building Marian with SentencePiece support
+## Building Marian with SentencePiece Support
 
 Since version 1.7.0, Marian has built-in support for SentencePiece,
 but this needs to be enabled at compile-time. We decided to make the compilation of SentencePiece
@@ -143,6 +143,15 @@ vocabulary. When the same vocabulary file is specified multiple times - like in 
 vocabulary is built for the union of the corresponding training files. This also enables us to use
 tied embeddings (`--tied-embeddings-all`).
 
+We can pass the Romanian-specific normalizaton rules via the `--sentencepiece-options` command line
+argument. The values of this option are passed on to the SentencePiece trainer, note the required single
+quotes around the SentencePiece options: `--sentencepiece-options '--normalization_rule_tsv=data/norm_romanian.tsv'`
+
+Another new feature is the `bleu-detok` validation metric. When used with SentencePiece this should
+give you in-training BLEU scores that are very close to sacreBLEU's scores. Differences may appear 
+if unexpected SentencePiece normalization rules are used. You should still report only official
+sacreBLEU scores for publications.
+
 ```
 $MARIAN/build/marian \
     --devices $GPUS \
@@ -165,10 +174,12 @@ $MARIAN/build/marian \
     --normalize=0.6 --beam-size=6 --quiet-translation
 ```
 
+The training should stop if cross-entropy on the validation set
+stops improving.
+
 ### Translating the test and validation sets with evaluation
 
-After training (the training should stop if cross-entropy on the validation set
-stops improving) the model with the highest translation validation score is used
+After training, the model with the highest translation validation score is used
 to translate the WMT2016 dev set and test set with `marian-decoder`:
 
 ```
