@@ -240,7 +240,10 @@ stops improving. Depending on the number of and generation of GPUs you are using
 ### Translating the test and validation sets with evaluation
 
 After training, the model with the highest translation validation score is used
-to translate the WMT2016 dev set and test set with `marian-decoder`:
+to translate the WMT2016 dev set and test set with `marian-decoder`. Note again,
+that none of the commands below required any type of pre-/post-processing. The 
+decoder consumes and outputs raw text with SentencePiece doing the tokenization, 
+normalization and segmentation on the fly. Similarly, sacreBLEU expects raw text.
 
 ```
 # translate dev set
