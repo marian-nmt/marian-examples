@@ -241,10 +241,11 @@ mkdir model
 ```
 
 The training should stop if cross-entropy on the validation set
-stops improving. Depending on the number of and generation of GPUs you are using that may take a while.
+stops improving. Depending on the number of and generation of GPUs you are using that 
+may take a while.
 
-To inspect the created SentencePiece model `model/vocab.roen.spm`, you can now segment any Romanian or English
-text with the following command:
+To inspect the created SentencePiece model `model/vocab.roen.spm`, you can now segment any
+Romanian or English text with the following command:
 ```
 cat data/newsdev2016.ro | ../../build/spm_encode --model=model/vocab.roen.spm | less
 ```
@@ -285,15 +286,19 @@ BLEU+case.mixed+lang.ro-en+numrefs.1+smooth.exp+test.wmt16+tok.13a+version.1.2.1
 
 ## Is Normalization Actually Required?
 
-We also quickly tested if the normalization of Romanian characters is actually neccessary and if there are other methods
-of dealing with the noise. SentencePiece supports a method called subword-regularization ([Kudo 2018](https://arxiv.org/abs/1804.10959)) that samples different
-subword splits at training time; ideally resulting in a more robust translation at inference time. You can enable sampling for the source language by replacing
-this line `--sentencepiece-options '--normalization_rule_tsv=data/norm_romanian.tsv'` with `--sentencepiece-alphas 0.2 0`; the sampling rate was recommended
-by [Kudo 2018](https://arxiv.org/abs/1804.10959).
+We also quickly tested if the normalization of Romanian characters is actually neccessary 
+and if there are other methods of dealing with the noise. SentencePiece supports a method 
+called subword-regularization ([Kudo 2018](https://arxiv.org/abs/1804.10959)) that samples 
+different subword splits at training time; ideally resulting in a more robust translation 
+at inference time. You can enable sampling for the source language by replacing
+this line `--sentencepiece-options '--normalization_rule_tsv=data/norm_romanian.tsv'` with
+ `--sentencepiece-alphas 0.2 0`; the sampling rate was recommended by [Kudo 2018](https://arxiv.org/abs/1804.10959).
 
-We compare against the University of Edinburgh's WMT16 submission (UEdin WMT16 - this is a Nematus ensemble with BPE and normalization),
-and against our own old example from `marian/examples/training-basics` (old-prepro - single Marian model with complex preprocessing pipeline,
-including tokenization, normalization, BPE). Raw training data should be identical for all models.
+We compare against the University of Edinburgh's WMT16 submission (UEdin WMT16 - this is 
+a Nematus ensemble with BPE and normalization), and against our own old example from 
+`marian/examples/training-basics` (old-prepro - single Marian model with complex preprocessing 
+pipeline, including tokenization, normalization, BPE). Raw training data should be identical 
+for all models.
 
 Here's the table:
 
@@ -302,18 +307,22 @@ Here's the table:
 | UEdin WMT16      | 35.3 | 33.9 |
 | old-prepro       | 35.9 | 34.5 |
 | SPM-raw          | 35.6 | 33.0 |
-| SPM-raw+sampling | 35.5 |      |
+| SPM-raw+sampling | 35.7 | 33.0 |
 | SPM-normalized   | 36.5 | 35.1 |
 
-The SentencePiece models are all better than the original Edinburgh systems (an emsemble!), but normalization is important. 
-We see that keeping the noise untouched (SPM-raw) results indeed in the worst of the three system, normalization (SPM-normalized) is best.
-Surprisingly there is no gain from sampled subwords splits (SPM-raw+sampling) over deterministic splits. 
+The SentencePiece models are all better than the original Edinburgh systems (an emsemble!) on 
+the dev set, not necessarily on the test set. And indeed, normalization seems to be is important. 
+We see that keeping the noise untouched (SPM-raw) results in the worst of the three system, 
+normalization (SPM-normalized) is best. Surprisingly, there is no gain from sampled subwords 
+splits (SPM-raw+sampling) over deterministic splits. 
 
-This is an interesting result: I would expected subword-sampling to help at least a little bit, but no. It seems we need to stick with
-normalization which is unfortunate for the following reasons: it is not trivial to discover the normalization problem in the first place and 
-creating a normalization table is another added difficulty; on top of that normalization breaks reversibility. The reversiblity problem is a 
-little less annoying if we only normalize the source and more-or-less keep the target (as in this case). For translation into Romanian we would 
-probably need to keep the diacritics. 
+This is an interesting (and disappointing) result: I would have expected subword-sampling to 
+help a good deal more. It seems we need to stick to normalization which is unfortunate for the 
+following reasons: it is not trivial to discover the normalization problem in the first place and 
+creating a normalization table is another added difficulty; on top of that normalization breaks 
+reversibility. The reversiblity problem is a little less annoying if we only normalize the 
+source and more-or-less keep the target (as in this case). For translation into Romanian we 
+would probably need to keep the diacritics. 
 
 That's all folks. More to come soon.
 
