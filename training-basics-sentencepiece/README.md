@@ -212,7 +212,7 @@ give you in-training BLEU scores that are very close to sacreBLEU's scores. Diff
 if unexpected SentencePiece normalization rules are used. You should still report only official
 sacreBLEU scores for publications.
 
-We are training of four GPUs defined with `--devices 0 1 2 3`. Change this to the required number of GPUs.
+We are training using four GPUs defined with `--devices 0 1 2 3`. Change this to the required number of GPUs.
 
 ```
 # create the model directory
@@ -241,7 +241,7 @@ mkdir model
 ```
 
 The training should stop if cross-entropy on the validation set
-stops improving. Depending on the number of and generation of GPUs you are using that 
+stops improving. Depending on the number and generation of GPUs you are using that 
 may take a while.
 
 To inspect the created SentencePiece model `model/vocab.roen.spm`, you can now segment any
