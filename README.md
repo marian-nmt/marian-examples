@@ -7,6 +7,7 @@ More information on https://marian-nmt.github.io
 List of examples:
 * `translating-amun` -- examples for translating with Amun
 * `training-basics` -- the complete example for training a WMT16-scale model
+* `training-basics-sentencepiece` -- as `training-basics`, but uses built-in SentencePiece for data processing, requires Marian v1.7+
 * `transformer` -- scripts for training the transformer model
 * `wmt2017-uedin` -- scripts for building a WMT2017-grade model for en-de based on Edinburgh's WMT2017 submission
 * `wmt2017-transformer` -- scripts for building a better than WMT2017-grade model for en-de, beating WMT2017 submission by 1.2 BLEU
