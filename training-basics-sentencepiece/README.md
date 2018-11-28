@@ -10,15 +10,15 @@ The model we build here is a simple Nematus-style shallow RNN model, similar to 
 `marian/examples/training-basics` folder. We will soon update our WMT Transformer examples to use
 SentencePiece.
 
-## Building Marian with SentencePiece Support
+## Building Marian with SentencePiece support
 
 Since version 1.7.0, Marian has built-in support for SentencePiece,
 but this needs to be enabled at compile-time. We decided to make the compilation of SentencePiece
 optional as SentencePiece has a number of dependencies - especially Google's Protobuf - that
 are potentially non-trivial to install.
 
-Following the the SentencePiece Readme, we list a couple of packages you would need to
-install for a coule of Ubuntu versions:
+Following the SentencePiece Readme, we list a couple of packages you would need to
+install for a couple of Ubuntu versions:
 
 On Ubuntu 14.04 LTS (Trusty Tahr):
 
@@ -66,12 +66,12 @@ which should display the following new options:
   --sentencepiece-max-lines UINT=10000000
 ```
 
-## Execute the Example
+## Execute the example
 
 Files and scripts in this folder have been adapted from the Romanian-English
 sample from https://github.com/rsennrich/wmt16-scripts. We also add the
 back-translated data from
-http://data.statmt.org/rsennrich/wmt16_backtranslations/ as desribed in
+http://data.statmt.org/rsennrich/wmt16_backtranslations/ as described in
 http://www.aclweb.org/anthology/W16-2323. In our experiments,
 we get a single model that is a good deal better than the ensemble from
 the Edinburgh WMT2016 system submission paper.
@@ -93,15 +93,15 @@ To use with a different GPU than device 0 or more GPUs (here 0 1 2 3) use the co
 ./run-me.sh 0 1 2 3
 ```
 
-## Step-by-step Walkthrough
+## Step-by-step walkthrough
 
 In this section we repeat the content from the above `run-me.sh` script with explanations. You should be
 able to copy and paste the commands and follow through all the steps.
 
 We assume you are running these commands from the examples directory of the main Marian directory tree
- `marian/examples/training-basics-sentencepiece` and that the Marian binaries have been compiled in
- `marian/build`. The localization of the Marian binary relative to the current directory is
- therefore `../../build/marian`.
+`marian/examples/training-basics-sentencepiece` and that the Marian binaries have been compiled in
+`marian/build`. The localization of the Marian binary relative to the current directory is
+therefore `../../build/marian`.
 
 ### Preparing the test and validation sets
 
@@ -156,7 +156,7 @@ cd ..
 
 It seems that the training data is quite noisy and multiple similar characters are used in place of
 the one correct character. Barry Haddow from Edinburgh who created the original normalization Python
-scripts noticed that removing diacritics on the Romanian side leads to a significant improvment in
+scripts noticed that removing diacritics on the Romanian side leads to a significant improvement in
 translation quality. And indeed we saw gains of up to 2 BLEU points due to normalization versus
 unnormalized text. The original scripts are located in the old Romanian-English example folder
 in `marian/examples/training-basics/scripts`. We do not need to use them here.
@@ -189,7 +189,7 @@ The effect of normalization can be inspected via the following command:
 ```
 cat data/newsdev2016.ro | ../../build/spm_normalize --normalization_rule_tsv=data/norm_romanian.tsv | less
 ```
-Notice how all diacritics are gone. 
+Notice how all diacritics are gone.
 
 ### Training the NMT model
 
@@ -198,7 +198,7 @@ raw training and validation data into Marian. A single joint SentencePiece model
 `model/vocab.roen.spm`. The `*.spm` suffix is required and tells Marian to train a SentencePiece
 vocabulary. When the same vocabulary file is specified multiple times - like in this example - a single
 vocabulary is built for the union of the corresponding training files. This also enables us to use
-tied embeddings (`--tied-embeddings-all`). The SentencePiece training process takes a couple of 
+tied embeddings (`--tied-embeddings-all`). The SentencePiece training process takes a couple of
 minutes depending on the input data size. The same `*.spm` can be later reused for other experiments
 with the same language pair and training is then of course omitted.
 
@@ -241,7 +241,7 @@ mkdir model
 ```
 
 The training should stop if cross-entropy on the validation set
-stops improving. Depending on the number and generation of GPUs you are using that 
+stops improving. Depending on the number and generation of GPUs you are using that
 may take a while.
 
 To inspect the created SentencePiece model `model/vocab.roen.spm`, you can now segment any
@@ -249,14 +249,14 @@ Romanian or English text with the following command:
 ```
 cat data/newsdev2016.ro | ../../build/spm_encode --model=model/vocab.roen.spm | less
 ```
-Notice how the text is not only split, but also normalized with regard to diacritics. 
+Notice how the text is not only split, but also normalized with regard to diacritics.
 
 ### Translating the test and validation sets with evaluation
 
 After training, the model with the highest translation validation score is used
 to translate the WMT2016 dev set and test set with `marian-decoder`. Note again,
-that none of the commands below required any type of pre-/post-processing. The 
-decoder consumes and outputs raw text with SentencePiece doing the tokenization, 
+that none of the commands below required any type of pre-/post-processing. The
+decoder consumes and outputs raw text with SentencePiece doing the tokenization,
 normalization and segmentation on the fly. Similarly, sacreBLEU expects raw text.
 
 ```
@@ -286,18 +286,18 @@ BLEU+case.mixed+lang.ro-en+numrefs.1+smooth.exp+test.wmt16+tok.13a+version.1.2.1
 
 ## Is Normalization Actually Required?
 
-We also quickly tested if the normalization of Romanian characters is actually neccessary 
-and if there are other methods of dealing with the noise. SentencePiece supports a method 
-called subword-regularization ([Kudo 2018](https://arxiv.org/abs/1804.10959)) that samples 
-different subword splits at training time; ideally resulting in a more robust translation 
+We also quickly tested if the normalization of Romanian characters is actually necessary
+and if there are other methods of dealing with the noise. SentencePiece supports a method
+called subword-regularization ([Kudo 2018](https://arxiv.org/abs/1804.10959)) that samples
+different subword splits at training time; ideally resulting in a more robust translation
 at inference time. You can enable sampling for the source language by replacing
 this line `--sentencepiece-options '--normalization_rule_tsv=data/norm_romanian.tsv'` with
  `--sentencepiece-alphas 0.2 0`; the sampling rate was recommended by [Kudo 2018](https://arxiv.org/abs/1804.10959).
 
-We compare against the University of Edinburgh's WMT16 submission (UEdin WMT16 - this is 
-a Nematus ensemble with BPE and normalization), and against our own old example from 
-`marian/examples/training-basics` (old-prepro - single Marian model with complex preprocessing 
-pipeline, including tokenization, normalization, BPE). Raw training data should be identical 
+We compare against the University of Edinburgh's WMT16 submission (UEdin WMT16 - this is
+a Nematus ensemble with BPE and normalization), and against our own old example from
+`marian/examples/training-basics` (old-prepro - single Marian model with complex preprocessing
+pipeline, including tokenization, normalization, BPE). Raw training data should be identical
 for all models.
 
 Here's the table:
@@ -310,19 +310,19 @@ Here's the table:
 | SPM-raw+sampling | 35.7 | 33.0 |
 | SPM-normalized   | 36.5 | 35.1 |
 
-The SentencePiece models are all better than the original Edinburgh systems (an emsemble!) on 
-the dev set, not necessarily on the test set. And indeed, normalization seems to be is important. 
-We see that keeping the noise untouched (SPM-raw) results in the worst of the three system, 
-normalization (SPM-normalized) is best. Surprisingly, there is no gain from sampled subwords 
-splits (SPM-raw+sampling) over deterministic splits. 
+The SentencePiece models are all better than the original Edinburgh systems (an ensemble!) on
+the dev set, not necessarily on the test set. And indeed, normalization seems to be is important.
+We see that keeping the noise untouched (SPM-raw) results in the worst of the three system,
+normalization (SPM-normalized) is best. Surprisingly, there is no gain from sampled subwords
+splits (SPM-raw+sampling) over deterministic splits.
 
-This is an interesting (and disappointing) result: I would have expected subword-sampling to 
-help a good deal more. It seems we need to stick to normalization which is unfortunate for the 
-following reasons: it is not trivial to discover the normalization problem in the first place and 
-creating a normalization table is another added difficulty; on top of that normalization breaks 
-reversibility. The reversiblity problem is a little less annoying if we only normalize the 
-source and more-or-less keep the target (as in this case). For translation into Romanian we 
-would probably need to keep the diacritics. 
+This is an interesting (and disappointing) result: I would have expected subword-sampling to
+help a good deal more. It seems we need to stick to normalization which is unfortunate for the
+following reasons: it is not trivial to discover the normalization problem in the first place and
+creating a normalization table is another added difficulty; on top of that normalization breaks
+reversibility. The reversibility problem is a little less annoying if we only normalize the
+source and more-or-less keep the target (as in this case). For translation into Romanian we
+would probably need to keep the diacritics.
 
 That's all folks. More to come soon.
 
