@@ -27,7 +27,7 @@ N=4
 EPOCHS=8
 B=12
 
-if [ ! -e MARIAN_TRAIN ]
+if [ ! -e $MARIAN_TRAIN ]
 then
     echo "marian is not installed in $MARIAN, you need to compile the toolkit first"
     exit 1
