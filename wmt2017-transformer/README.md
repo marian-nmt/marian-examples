@@ -86,7 +86,7 @@ improving on Edinburgh's system submission to WMT2017 by 1.2 BLEU:
 | R2L Rerank | 29.08    | 31.04    | 36.80            | 29.50    |
 |Edinburgh WMT17  | --       |  --      | 36.20            | 28.30    |
 
-It seems R2L reranking does not do much for the transformer, you might want to ommit it. We left it in there
+It seems R2L reranking does not do much for the transformer, you might want to omit it. We left it in there
 to make sure and to have all components of the Edinburgh recipe.
 Training all components for more than 8 epochs is likely to improve results further.
 So could increasing model dimensions (e.g. with `--dim-emb 1024` or `--transformer-dim-ffn 4096`), but that will
