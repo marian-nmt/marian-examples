@@ -1,5 +1,7 @@
 #!/bin/bash -v
 
+ENABLE_CUBLAS_TENSOR_OP_MATH_FP32=0
+
 MARIAN=../..
 
 # set chosen gpus
@@ -77,7 +79,7 @@ $MARIAN/build/marian \
     --log model/train.log --valid-log model/valid.log --tempdir model \
     --overwrite --keep-best \
     --seed 1111 --exponential-smoothing \
-    --normalize=0.6 --beam-size=6 --quiet-translation
+    --normalize=0.6 --beam-size=6 --quiet-translation --clip-norm 0 --disp-first 100
 
 # translate dev set
 cat data/newsdev2016.ro \

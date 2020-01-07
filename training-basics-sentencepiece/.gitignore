@@ -1,5 +1,5 @@
-data/corpus.*
-data/news*.ro
-data/news*.en
-data/*.output
+azcopy
+azcopy.tgz
+data
+data.tgz
 model
