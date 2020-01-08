@@ -38,23 +38,34 @@ if [ ! -e "model/model.npz.best-bleu-detok.npz" ]
 then
     $MARIAN_TRAIN \
         --devices $GPUS \
-        --task transformer-base \
-        --model model/model.npz \
-        --train-sets data/noisybt.merge.train.4.filtered.{en,de} \
+        --task transformer-base --model model/model.npz \
+        --train-sets data/noisybt.merge.train.4.filtered.{en,de} --max-length 256 \
         --vocabs data/vocab.ende.{spm,spm} \
-        --early-stopping 10 --max-length 256 \
-        --valid-freq 5000 --save-freq 5000 --disp-freq 500 \
-        --valid-metrics bleu-detok ce-mean-words \
-        --valid-sets data/valid.{en,de} \
+        --early-stopping 5 --valid-freq 5000 --save-freq 5000 --disp-freq 500 --disp-first 10 \
+        --valid-metrics bleu-detok ce-mean-words --valid-sets data/valid.{en,de} --quiet-translation \
         --log model/train.log --valid-log model/valid.log \
-        --overwrite --keep-best \
-        --seed 1234 --exponential-smoothing --quiet-translation \
+        --overwrite --keep-best --seed 1234 --exponential-smoothing \
         --transformer-dropout 0.1 --label-smoothing 0 \
         --transformer-decoder-autoreg rnn --dec-cell ssru \
-        --transformer-tied-layers 1 1 1 1 1 1 --dec-depth $DEC_DEPTH
+        --transformer-tied-layers 1 1 1 1 1 1 --dec-depth $DEC_DEPTH \
+        --beam-size 1
 fi
 
 if [ ! -e "model/model.npz.best-bleu-detok.8.bin" ]
 then
     $MARIAN_CONV -f model/model.npz.best-bleu-detok.npz -t model/model.npz.best-bleu-detok.8.bin -g packed8avx512
 fi
+
+# add short list
+
+mkdir -p output
+if [ ! -e "output/newstest2014.out" ]
+then
+    cat data/newstest2014.en | \
+    $MARIAN_DECODER -m model/model.npz.best-bleu-detok.8.bin -v data/vocab.{spm,spm} \
+    --beam-size 1 --skip-cost --cpu-threads 1 --mini-batch 32 --maxi-batch 100 --maxi-batch-sort src \
+    --quiet-translation > output/newstest2014.out
+
+    ../tools/sacreBLEU/sacrebleu.py --force data/newstest2014.de < out/newstest2014.out
+fi
+
