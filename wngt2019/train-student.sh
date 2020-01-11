@@ -45,9 +45,10 @@ then
         --valid-metrics bleu-detok ce-mean-words --valid-sets data/valid.{en,de} --quiet-translation \
         --log model/train.log --valid-log model/valid.log \
         --overwrite --keep-best --seed 1234 --exponential-smoothing \
-        --transformer-dropout 0.1 --label-smoothing 0 \
+        --transformer-dropout 0.0 --label-smoothing 0 \
         --transformer-decoder-autoreg rnn --dec-cell ssru \
         --transformer-tied-layers 1 1 1 1 1 1 --dec-depth $DEC_DEPTH \
+        --optimizer-params 0.9 0.98 1e-09 0.05
         --beam-size 1
 fi
 
