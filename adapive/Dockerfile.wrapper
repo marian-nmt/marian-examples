@@ -1,0 +1,7 @@
+﻿FROM python:3.8
+
+COPY wrapper_service .
+RUN pip install -r requirements.txt
+
+EXPOSE 80
+ENTRYPOINT [ "python", "./wrapper_service.py", "--port", "80"]

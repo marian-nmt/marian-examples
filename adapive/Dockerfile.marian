@@ -1,0 +1,36 @@
+﻿FROM nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04 as builder
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install tools
+RUN apt-get update && apt-get install -y \
+	git \
+	build-essential \
+	libboost-all-dev \
+    libprotobuf-c-dev \
+    protobuf-compiler \
+    libprotobuf-dev \
+    openssl \
+    libssl-dev \
+    libgoogle-perftools-dev
+
+# Install CMake
+ADD https://github.com/Kitware/CMake/releases/download/v3.19.5/cmake-3.19.5-Linux-x86_64.sh ./
+RUN mkdir /opt/cmake && bash ./cmake-3.19.5-Linux-x86_64.sh --prefix=/opt/cmake --skip-license && ln -s /opt/cmake/bin/cmake /usr/local/bin/cmake
+
+# Get stable adaptive marian
+RUN git clone https://github.com/marian-nmt/marian-dev.git /marian-dev && mkdir /marian-dev/build
+WORKDIR /marian-dev
+RUN git config --global user.email "you@example.com" && git fetch --all && git checkout 240bd347 &&  git cherry-pick 4d57f87a  && git cherry-pick 21dfbb01 && git cherry-pick 63315319
+
+# Compile marian
+WORKDIR /marian-dev/build/
+RUN cmake -DCOMPILE_CPU=OFF -DCOMPILE_CUDA=ON -DUSE_CUDNN=ON -DCMAKE_BUILD_TYPE=RELEASE -DUSE_STATIC_LIBS=ON .. && make -j4
+
+# Get runtime env and copy binary
+FROM nvidia/cuda:10.1-cudnn7-runtime-ubuntu18.04
+COPY --from=builder /marian-dev/build/marian-adaptive /marian-adaptive
+
+EXPOSE 80
+# marian-adaptive
+ENTRYPOINT [ "/marian-adaptive", "--port", "80"]

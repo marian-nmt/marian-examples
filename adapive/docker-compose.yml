@@ -1,0 +1,48 @@
+﻿version: '2.3'
+
+services:
+  tm:
+    build:
+      context: .
+      dockerfile: Dockerfile.tm
+    volumes: # Specify where index is stored
+      - "./index:/index"
+    command: [
+        "--bleu-rescoring-threshold", "0.05",
+        "--index-dir", "/index"
+    ]
+
+  adaptive:
+    build:
+      context: .
+      dockerfile: Dockerfile.marian
+    volumes: # Specify where marian model is stored
+      - "./marian-model:/marian-model"
+    command: [
+        "--config", "/marian-model/decoder.yml",
+        "--after-batches", "10",
+        "--after-epochs", "10",
+        "--learn-rate", "0.1",
+        "--mini-batch", "15",
+        "--workspace", "9000"
+    ]
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: [ '0' ]
+              capabilities: [ gpu ]
+
+  wrapper:
+    build:
+      context: .
+      dockerfile: Dockerfile.wrapper
+    ports:
+      - "8088:80"
+    command: [
+        "--tm-server", "http://tm:80",
+        "--marian-server", "ws://adaptive:80"
+    ]
+
