@@ -1,4 +1,4 @@
-﻿# Marian NMT dynamic adaptation example
+# Marian NMT dynamic adaptation example
 
 This repository aims to provide working  self-contained example of Marian NMT system with dynamic adaptation.
 
@@ -22,8 +22,8 @@ service also serves as a simple example how Translation Memory and Marian intera
 
 ## Prerequisites
 
-The example is built and run with _Docker_ and _docker-compose_ v1.28.0+ and is expected to run on a machine equipped
-Nvidia GPU `https://docs.docker.com/compose/install/`
+The example is built and run with _Docker_  and _docker-compose_ v1.28.0+ https://docs.docker.com/compose/install/ it also requires nvidia-container-runtime https://github.com/NVIDIA/nvidia-container-runtime
+and a machine equipped with Nvidia GPU.
 
 ## How to build and run example
 
@@ -47,39 +47,27 @@ Wrapper service exposes 3 actions:
 Wrapper API call examples:
 
 ````
-POST http://localhost:8088/translate
-Content-Type: application/json
+curl \
+--header "Content-Type: application/json" \
+--request POST \
+--data '{"input":"Hello World !","meta": {"uid": "Artūrs", "srclang": "en"}}' \
+http://localhost:8088/translate
 
-Request: 
-{
-  "input": "Hello world !",
-  "meta": {
-    "uid": "Artūrs",
-    "srclang": "en"
-  }
-}
 
-Reply:
+Response:
 {
   "output": "Sveikas pasaulis !"
 }
 ````
 
 ```
-POST http://localhost:8088/save
-Content-Type: application/json
+curl \
+--header "Content-Type: application/json" \
+--request POST \
+--data '{"source":"Hello World !", "target": "Sveika pasaule !", "meta": {"uid": "Artūrs", "srclang": "en"}}' \
+http://localhost:8088/save
 
-Request:
-{
-  "source": "Hello world !",
-  "target": "Sveika pasaule !",
-  "meta": {
-    "uid": "Artūrs",
-    "srclang": "en"
-  }
-}
-
-Reply: 
+Response: 
 {
   "errorMessage": null,
   "status": "OK"
@@ -87,15 +75,13 @@ Reply:
 ```
 
 ```
-POST http://localhost:8088/delete
-Content-Type: application/json
+curl \
+--header "Content-Type: application/json" \
+--request POST \
+--data '{"uid": "Artūrs"}' \
+http://localhost:8088/delete
 
-Request:
-{
-    "uid": "Artūrs"
-}
-
-Reply: 
+Response: 
 {
   "errorMessage": null,
   "status": "OK"
