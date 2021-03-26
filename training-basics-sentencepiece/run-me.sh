@@ -44,11 +44,11 @@ then
     gzip -d corpus.bt.ro-en.en.gz corpus.bt.ro-en.ro.gz
 
     # create corpus files
-    cat europarl-v7.ro-en.en SETIMES2.en-ro.en corpus.bt.ro-en.en > corpus.en
-    cat europarl-v7.ro-en.ro SETIMES2.en-ro.ro corpus.bt.ro-en.ro > corpus.ro
+    cat europarl-v7.ro-en.en SETIMES.en-ro.en corpus.bt.ro-en.en > corpus.en
+    cat europarl-v7.ro-en.ro SETIMES.en-ro.ro corpus.bt.ro-en.ro > corpus.ro
 
     # clean
-    rm ro-en.tgz SETIMES2.* corpus.bt.* europarl-*
+    rm ro-en.tgz SETIMES* corpus.bt.* europarl-*
 
     # change back into main directory
     cd ..
