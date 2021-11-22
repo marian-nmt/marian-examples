@@ -50,13 +50,13 @@ Wrapper API call examples:
 curl \
 --header "Content-Type: application/json" \
 --request POST \
---data '{"input":"Hello World !","meta": {"uid": "Artūrs", "srclang": "en"}}' \
+--data '{"input":"Hello World !\nAdam ate apple","meta": {"uid": "Artūrs", "srclang": "en"}}' \
 http://localhost:8088/translate
 
 
 Response:
 {
-  "output": "Sveikas pasaulis !"
+  "output": "Sveikas pasaulis !\\nĀdams apēda abolu"
 }
 ````
 
@@ -64,7 +64,7 @@ Response:
 curl \
 --header "Content-Type: application/json" \
 --request POST \
---data '{"source":"Hello World !", "target": "Sveika pasaule !", "meta": {"uid": "Artūrs", "srclang": "en"}}' \
+--data '{"source":"Hello World !\nNew World!", "target": "Sveika pasaule!\nJauna pasaule!", "meta": {"uid": "Artūrs", "srclang": "en"}}' \
 http://localhost:8088/save
 
 Response: 
