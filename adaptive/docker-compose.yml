@@ -23,8 +23,7 @@ services:
         "--after-batches", "10",
         "--after-epochs", "10",
         "--learn-rate", "0.1",
-        "--mini-batch", "15",
-        "--workspace", "9000"
+        "--mini-batch", "15"
     ]
 
     deploy:

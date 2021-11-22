@@ -28,7 +28,10 @@ def translate():
 def add_sentence():
     # {'meta': {'uid': 'name', 'language': 'en'}, 'source': 'hello world', 'target': 'sveika pasaule'}
     req = request.json
-    result = requests.post(args.tm_server + "/save", json=req).json()
+
+    for source, target in zip(req['source'].split('\n'), req['target'].split('\n')):
+        result = requests.post(args.tm_server + "/save",
+                               json={'meta': req['meta'], 'source': source, 'target': target}).json()
     return jsonify(result), 201
 
 
@@ -43,11 +46,7 @@ def drop_index():
 
 def __call_marian(url, input, context):
     ws = create_connection(url + '/translate')
-
-    if any(c == "" for c in context):
-        ws.send(json.dumps({'input': input}))
-    else:
-        ws.send(json.dumps({'input': input, 'context': [context]}))
+    ws.send(json.dumps({'input': input, 'context': context}))
 
     result = ws.recv()
     ws.close()
@@ -56,8 +55,20 @@ def __call_marian(url, input, context):
 
 
 def __fetch_context(url, req):
-    result = requests.post(url + "/get", json=req).json()
-    return ["\n".join(result["sourceContext"]), "\n".join(result["targetContext"])]
+    context = []
+
+    for i in req['input'].split('\n'):
+        result = requests.post(url + "/get", json={'meta': req['meta'], 'input': i}).json()
+
+        source = "\n".join(result["sourceContext"])
+        target = "\n".join(result["targetContext"])
+
+        if source == "" or target == "":
+            context.append([])
+        else:
+            context.append([source, target])
+
+    return context
 
 
 app.run(debug=True, port=args.port, host='0.0.0.0')
