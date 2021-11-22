@@ -2,7 +2,7 @@ FROM openjdk:8 as builder
 
 RUN git clone https://github.com/tilde-nlp/lucene-sentence-search.git
 WORKDIR lucene-sentence-search
-RUN git pull && git checkout a3f0c0ba
+RUN git pull && git checkout 63f8f23f
 
 RUN bash ./gradlew installDist
 
