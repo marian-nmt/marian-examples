@@ -4,7 +4,7 @@ Examples, tutorials and use cases for the Marian toolkit.
 
 More information on https://marian-nmt.github.io
 
-List of examples:
+## Examples
 * `translating-amun` -- examples for translating with Amun
 * `training-basics` -- the complete example for training a WMT16-scale model
 * `training-basics-sentencepiece` -- as `training-basics`, but uses built-in SentencePiece for data processing, requires Marian v1.7+
@@ -12,20 +12,25 @@ List of examples:
 * `wmt2017-uedin` -- scripts for building a WMT2017-grade model for en-de based on Edinburgh's WMT2017 submission
 * `wmt2017-transformer` -- scripts for building a better than WMT2017-grade model for en-de, beating WMT2017 submission by 1.2 BLEU
 
-## Usage
+### Usage
 
 First download common tools:
-
-    cd tools
-    make all
-    cd ..
+```shell
+cd tools
+make all
+cd ..
+```
 
 Next, go to the chosen directory and run `run-me.sh`, e.g.:
-
-    cd training-basics
-    ./run-me.sh
+```shell
+cd training-basics
+./run-me.sh
+```
 
 The README file in each directory provides more detailed description.
+
+## Templates
+* `example-library` -- example using Marian as a library demonstrating basic graph operations, available as a repository [template](https://github.com/marian-nmt/marian-example-library/generate)
 
 ## Acknowledgements
 
@@ -39,4 +44,3 @@ the Amazon Academic Research Awards program, and
 the World Intellectual Property Organization.
 
 This software contains source code provided by NVIDIA Corporation.
-
