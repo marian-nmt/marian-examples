@@ -1,4 +1,0 @@
-[submodule "example-library"]
-	path = example-library
-	url = https://github.com/marian-nmt/marian-example-library
-	branch = main
