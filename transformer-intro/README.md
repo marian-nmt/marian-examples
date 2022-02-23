@@ -60,7 +60,9 @@ cmake .. -DCMAKE_BUILD_TYPE=Release -DUSE_SENTENCEPIECE=ON
 cmake --build .
 ```
 
-To speed up compilation we can use ```cmake --build . -j 8``` to run 8 tasks simultaneously.
+To speed up compilation we can use ```cmake --build . -j 8``` to run 8 tasks
+simultaneously. You may need to reduce this based on your system CPU and
+available memory.
 
 If it succeeded, running
 ```shell
