@@ -1,0 +1,46 @@
+# Model options
+type: transformer
+dim-emb: 512
+enc-depth: 6
+dec-depth: 6
+tied-embeddings-all: true
+transformer-heads: 8
+transformer-dim-ffn: 2048
+transformer-ffn-activation: relu
+transformer-preprocess: ""
+transformer-postprocess: dan
+transformer-dropout: 0.1
+
+# Training options
+cost-type: ce-mean-words
+max-length: 100
+mini-batch: 1000
+mini-batch-fit: true
+maxi-batch: 1000
+optimizer-params:
+  - 0.9
+  - 0.98
+  - 1e-09
+sync-sgd: true
+learn-rate: 0.0003
+lr-decay-inv-sqrt:
+  - 16000
+lr-warmup: 16000
+label-smoothing: 0.1
+clip-norm: 0
+exponential-smoothing: 0.0001
+disp-freq: 1000
+disp-first: 10
+save-freq: 2ku
+early-stopping: 10
+
+# Validation set options
+keep-best: true
+beam-size: 8
+normalize: 1
+valid-freq: 2ku
+valid-metrics:
+  - ce-mean-words
+  - bleu
+  - perplexity
+valid-mini-batch: 16

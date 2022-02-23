@@ -1,0 +1,15 @@
+.venv
+*.log
+
+# Data
+data/*.de
+data/*.en
+data/*.gz
+data/*.tgz
+data/*tsv
+data/commoncrawl*
+data/corpus.*
+
+# Model
+model*/
+evaluation

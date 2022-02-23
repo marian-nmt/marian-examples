@@ -1,0 +1,2 @@
+sacrebleu>=2.0.0
+unbabel-comet>=1.0.1
