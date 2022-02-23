@@ -1,4 +1,7 @@
-# Basic Transformer
+# Intro to Transformers
+
+This tutorial is designed to help you train your first machine translation
+model. To follow along, you'll need a Linux-based system and an NVIDIA GPU.
 
 In this example we will use Marian to create a English-German translation
 system. We'll follow a very simple pipeline with data acquisition, some basic
