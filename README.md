@@ -5,12 +5,20 @@ Examples, tutorials and use cases for the Marian toolkit.
 More information on https://marian-nmt.github.io
 
 ## Examples
+
+* `transformer-intro` -- an introduction to training your first transformer model if you are new to Marian and NMT
 * `translating-amun` -- examples for translating with Amun
 * `training-basics` -- the complete example for training a WMT16-scale model
 * `training-basics-sentencepiece` -- as `training-basics`, but uses built-in SentencePiece for data processing, requires Marian v1.7+
 * `transformer` -- scripts for training the transformer model
-* `wmt2017-uedin` -- scripts for building a WMT2017-grade model for en-de based on Edinburgh's WMT2017 submission
-* `wmt2017-transformer` -- scripts for building a better than WMT2017-grade model for en-de, beating WMT2017 submission by 1.2 BLEU
+* `wmt2017-uedin` -- building a WMT2017-grade model for en-de based on Edinburgh's WMT2017 submission
+* `wmt2017-transformer` -- building a better than WMT2017-grade model for en-de, beating WMT2017 submission by 1.2 BLEU
+* `wmt2017-transformer` -- building a better than WMT2017-grade model for en-de, beating WMT2017 submission by 1.2 BLEU
+* `forced-translation` -- an example showing how to apply forced translation using bilingual terminology dictionary
+
+## Templates
+
+* `example-library` -- example using Marian as a library demonstrating basic graph operations, available as a repository [template](https://github.com/marian-nmt/marian-example-library/generate)
 
 ### Usage
 
@@ -28,9 +36,6 @@ cd training-basics
 ```
 
 The README file in each directory provides more detailed description.
-
-## Templates
-* `example-library` -- example using Marian as a library demonstrating basic graph operations, available as a repository [template](https://github.com/marian-nmt/marian-example-library/generate)
 
 ## Acknowledgements
 
