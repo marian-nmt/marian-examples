@@ -40,6 +40,8 @@ _Horizon 2020 Research and Innovation Programme_ under grant agreements
 645487 ([Modern MT](http://www.modernmt.eu); 2015-2017),
 644333 ([TraMOOC](http://tramooc.eu/); 2015-2017),
 644402 ([HiML](http://www.himl.eu/); 2015-2017),
+the European Union's Connecting Europe Facility project
+2019-EU-IA-0045 ([User-focused Marian](https://marian-project.eu); 2020-2022),
 the Amazon Academic Research Awards program, and
 the World Intellectual Property Organization.
 
