@@ -33,7 +33,8 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
-You can skip the first two of these commands if you don't want to use a virtual environment.
+You can skip the first two of these commands if you don't want to use a virtual
+environment.
 
 Next we'll install Marian!
 
@@ -46,7 +47,10 @@ cd marian-dev
 ```
 
 ### Compile
-To compile Marian we need to ensure we have the required packages. The list of requirements can be found in the [documentation][install_marian]. Since we're using SentencePiece, we also need to make sure we have satisfy its[requirements][install_sentencepiece] too.
+To compile Marian we need to ensure we have the required packages. The list of
+requirements can be found in the [documentation][install_marian]. Since we're
+using SentencePiece, we also need to make sure we have satisfy its
+[requirements][install_sentencepiece] too.
 
 Then we can compile with
 ```shell
@@ -58,7 +62,7 @@ cmake --build .
 
 To speed up compilation we can use ```cmake --build . -j 8``` to run 8 tasks simultaneously.
 
-If it succeeded running
+If it succeeded, running
 ```shell
 ./marian --version
 ```
