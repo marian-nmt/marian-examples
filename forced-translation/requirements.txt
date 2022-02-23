@@ -1,0 +1,3 @@
+stanza==1.2
+subword-nmt==0.3.7
+sacrebleu==1.5.1
