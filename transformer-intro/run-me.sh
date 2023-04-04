@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-MARIAN=../../build
+if [ -z ${MARIAN+x} ]; then MARIAN=../../build; fi
 if [ ! -e $MARIAN/marian ]; then
   echo "Marian is not found at '$MARIAN'. Please compile it first!"
   exit 1;
