@@ -29,8 +29,13 @@ fi
 
 if [ ! -e ../tools/moses-scripts ] || [ ! -e ../tools/subword-nmt ]
 then
-    echo "missing tools in ../tools, you need to download them first"
-    exit 1
+    # Try to download tools first
+    make -C ../tools
+    if [ $? -ne 0 ]
+    then
+        echo "missing tools in ../tools, you need to download them first"
+        exit 1
+    fi
 fi
 
 if [ ! -e "data/corpus.en" ]
